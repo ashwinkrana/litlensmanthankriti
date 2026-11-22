@@ -66,7 +66,7 @@ export function TopBar({
           className="group flex items-center gap-2.5 rounded-xl px-2 py-1 transition"
           aria-label="LitLens home"
         >
-          <LogoMark className="h-8 w-8 shadow-book transition group-hover:scale-105 group-active:scale-95" />
+          <LogoMark className="h-8 w-8 transition group-hover:scale-105 group-active:scale-95" />
           <span className="text-lg font-extrabold tracking-tight text-ink">LitLens</span>
         </button>
 
