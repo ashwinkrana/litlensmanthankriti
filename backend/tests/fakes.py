@@ -174,13 +174,16 @@ def make_services(
     settings: Settings | None = None,
     fetcher: FakeFetcher | None = None,
 ):  # -> Services (import kept local to avoid cycles)
+    from app.pipeline.demo import DemoIndex
     from app.pipeline.jobs import JobRegistry
     from app.pipeline.services import Services
     from app.retrieval.vectorstore import NumpyStore
 
     cache = Cache(tmp_path / "svc-cache.sqlite")
-    router = make_router(tmp_path, groq=groq, gemini=gemini, cache=cache)
     s = settings or make_settings(tmp_path)
+    router = make_router(
+        tmp_path, groq=groq, gemini=gemini, cache=cache, offline=s.demo_mode
+    )
     return Services(
         settings=s,
         cache=cache,
@@ -190,6 +193,7 @@ def make_services(
         jobs=JobRegistry(tmp_path / "reviews"),
         fetcher=fetcher or FakeFetcher({}),  # type: ignore[arg-type]
         vectors=NumpyStore(tmp_path / "vectors"),
+        demo=DemoIndex(tmp_path / "demo" / "index.json"),
     )
 
 

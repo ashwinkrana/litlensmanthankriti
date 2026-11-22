@@ -212,6 +212,16 @@ class LLMRouter:
             return result
 
 
+class ForcedRateLimitProvider:
+    """Wraps a provider and fails every call with a long 429 (fallback testing)."""
+
+    def __init__(self, inner: LLMProvider) -> None:
+        self.name = inner.name
+
+    async def complete(self, *args: Any, **kwargs: Any) -> LLMResult:
+        raise RateLimitedError("forced 429 (DEBUG_FORCE_GROQ_429)", retry_after=60)
+
+
 def build_router(settings: Settings, cache: Cache) -> LLMRouter:
     """Create providers from settings. Imports are local so tests never need keys."""
     groq_p: LLMProvider | None = None
@@ -224,6 +234,11 @@ def build_router(settings: Settings, cache: Cache) -> LLMRouter:
             reasoning_effort=settings.groq_reasoning_effort,
             timeout_s=settings.llm_timeout_s,
         )
+        if settings.debug_force_groq_429 and settings.is_dev:
+            log.warning(
+                "DEBUG_FORCE_GROQ_429 is on: every Groq call will fail with 429"
+            )
+            groq_p = ForcedRateLimitProvider(groq_p)
     if settings.gemini_configured and settings.gemini_api_key is not None:
         from app.llm.gemini_provider import GeminiProvider
 

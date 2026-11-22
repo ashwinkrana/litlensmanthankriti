@@ -23,6 +23,9 @@ sse-starlette==3.7.0          # Server-Sent Events for the live progress stream
 pymupdf==2.1                  # PDF page text extraction
 chromadb==1.5.9               # vector database (telemetry disabled in code); NumPy fallback
 
+# --- M6: eval harness ---
+pyyaml==6.0.3                 # reads eval/topics.yaml (already pulled in by chromadb)
+
 # --- Dev tools ---
 pytest==9.2.0
 ruff==0.17.6

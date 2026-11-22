@@ -27,6 +27,9 @@ class Job:
         self.result = result
         self.events: list[StageEvent] = []
         self.finished = False  # True once the event stream has ended (after indexing)
+        # Which job's full-text index answers Q&A. A demo replay reuses the
+        # pre-warmed job's vectors instead of re-indexing (DESIGN §7).
+        self.vectors_id: UUID = job_id
         self._subscribers: set[asyncio.Queue[StageEvent | None]] = set()
 
     async def publish(self, event: StageEvent) -> None:
@@ -86,20 +89,21 @@ class JobRegistry:
         self._tasks.add(task)
         task.add_done_callback(self._tasks.discard)
 
-    def _paths(self, job_id: UUID) -> tuple[Path, Path]:
+    def _paths(self, job_id: UUID) -> tuple[Path, Path, Path]:
         result = (self._dir / f"{job_id}.json").resolve()
         events = (self._dir / f"{job_id}.events.json").resolve()
+        meta = (self._dir / f"{job_id}.meta.json").resolve()
         # SECURITY V-2/D-4: never leave the reviews folder.
-        for p in (result, events):
+        for p in (result, events, meta):
             if p.parent != self._dir:
                 raise ValueError("unsafe path")
-        return result, events
+        return result, events, meta
 
     def get(self, job_id: UUID) -> Job | None:
         job = self._jobs.get(job_id)
         if job is not None:
             return job
-        result_path, events_path = self._paths(job_id)
+        result_path, events_path, meta_path = self._paths(job_id)
         if not result_path.is_file():
             return None
         try:
@@ -109,18 +113,25 @@ class JobRegistry:
                 if events_path.is_file()
                 else []
             )
+            meta = (
+                json.loads(meta_path.read_text("utf-8")) if meta_path.is_file() else {}
+            )
+            vectors_id = UUID(meta["vectors_id"]) if "vectors_id" in meta else job_id
         except OSError, ValueError:
             log.warning("could not load saved review %s", job_id)
             return None
         job = Job(job_id, ReviewRequest(topic=result.topic), result)
         job.events = events
         job.finished = True
+        job.vectors_id = vectors_id
         self._jobs[job_id] = job
         return job
 
     def save(self, job: Job) -> None:
-        result_path, events_path = self._paths(job.id)
+        result_path, events_path, meta_path = self._paths(job.id)
         _atomic_write(result_path, job.result.model_dump_json(indent=2))
+        if job.vectors_id != job.id:
+            _atomic_write(meta_path, json.dumps({"vectors_id": str(job.vectors_id)}))
         _atomic_write(
             events_path,
             json.dumps(

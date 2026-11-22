@@ -1,0 +1,23 @@
+# Evaluation topics (SRS FR-60): at least 10, across different CS fields.
+# Edit freely; results are cached, so re-running unchanged topics is free.
+topics:
+  - topic: graph neural networks for drug discovery
+    field: Machine learning / bioinformatics
+  - topic: federated learning privacy attacks
+    field: Security / machine learning
+  - topic: retrieval-augmented generation for question answering
+    field: Natural language processing
+  - topic: crop disease detection using deep learning
+    field: Computer vision / agriculture
+  - topic: zero-knowledge proofs for blockchain scalability
+    field: Cryptography / distributed systems
+  - topic: reinforcement learning for robot manipulation
+    field: Robotics
+  - topic: code generation with large language models
+    field: Software engineering
+  - topic: energy-efficient task scheduling in edge computing
+    field: Systems / networking
+  - topic: explainable AI for medical image diagnosis
+    field: Healthcare AI
+  - topic: adversarial attacks on autonomous driving perception
+    field: Security / computer vision

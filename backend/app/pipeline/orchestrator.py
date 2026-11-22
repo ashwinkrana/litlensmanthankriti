@@ -40,8 +40,11 @@ class _StageTimer:
             self.stage_ms[stage] = int((time.monotonic() - t0) * 1000)
 
 
-async def run_review(job: Job, services: Services) -> None:
-    """Run the whole pipeline for one job. Never raises."""
+async def run_review(job: Job, services: Services, *, index: bool = True) -> None:
+    """Run the whole pipeline for one job. Never raises.
+
+    `index=False` skips full-text indexing (used by the eval harness).
+    """
     ctx = RunContext(
         settings=services.settings,
         router=services.router,
@@ -71,7 +74,9 @@ async def run_review(job: Job, services: Services) -> None:
     # Background full-text indexing (FR-16): the review is already available;
     # the stream stays open until Q&A is ready. Runs outside the pipeline lock
     # so the next review can start meanwhile.
-    if job.result.status == "done":
+    if job.result.status == "done" and not index:
+        await ctx.emit("indexing", "skipped", "Full-text indexing skipped")
+    elif job.result.status == "done":
         try:
             ready = await index_papers(
                 job.result.papers, ctx, fetcher=services.fetcher, store=services.vectors

@@ -44,6 +44,9 @@ class Settings(BaseSettings):
     # Optional; allowed values differ per Gemini model (e.g. low/medium/high).
     gemini_thinking_level: str = ""
     llm_timeout_s: float = 60.0
+    # M6 test switch: every Groq call acts like a 429 so the Gemini fallback runs.
+    # Only honoured when ENV=dev.
+    debug_force_groq_429: bool = False
 
     # --- Server ---
     env: Literal["dev", "prod"] = "dev"
