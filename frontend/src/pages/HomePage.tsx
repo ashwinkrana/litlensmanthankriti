@@ -2,6 +2,7 @@ import { useRef, useState, type CSSProperties } from 'react'
 import { ArrowRightIcon, SparkleIcon } from '../components/icons'
 import { InkButton, Spinner } from '../components/ui'
 import { HootOnBranch, HootSpeaker } from '../components/hoot/HootPerch'
+import { HomeAmbience } from '../components/backgrounds/HomeAmbience'
 import type { Theme } from '../components/TopBar'
 import { useMediaQuery } from '../lib/useMediaQuery'
 import { useHoot } from '../lib/hootContext'
@@ -52,6 +53,8 @@ export function HomePage({
 
   return (
     <div className="relative">
+    {/* decoration only: leaves off Hoot's branch, dust in the lamp light (dark) */}
+    <HomeAmbience theme={theme} />
     {onBranch && <HootOnBranch animate={animate} theme={theme} className="top-[6%]" />}
     {/* Centred in the first screen (viewport minus top bar and footer). */}
     <main ref={stage} className="mx-auto flex min-h-[calc(100dvh-7.5rem)] w-full max-w-3xl flex-col justify-center px-5 py-10 text-center">

@@ -199,6 +199,63 @@ html[data-motion='off'] *::after {
   will-change: transform;
 }
 
+/* Home ambience (components/backgrounds/HomeAmbience.tsx) */
+/* leaves: fall the full height while drifting left, with a separate sway */
+@keyframes leaf-fall {
+  from {
+    transform: translate3d(0, -40px, 0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  to {
+    transform: translate3d(-22vw, 105vh, 0);
+    opacity: 0;
+  }
+}
+@keyframes leaf-sway {
+  0%,
+  100% {
+    transform: translateX(-14px) rotate(-28deg);
+  }
+  50% {
+    transform: translateX(14px) rotate(32deg);
+  }
+}
+.falling-leaf {
+  animation: leaf-fall linear infinite;
+  will-change: transform, opacity;
+}
+.leaf-sway {
+  animation: leaf-sway ease-in-out infinite;
+}
+/* dust motes in the lamp light: slow drift and a gentle twinkle */
+@keyframes mote-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translate3d(10px, -18px, 0);
+    opacity: 0.75;
+  }
+}
+/* Motion off: pure decoration, so hide it rather than freeze it in place */
+html[data-motion='off'] .falling-leaf,
+html[data-motion='off'] .lamp-mote {
+  display: none;
+}
+.lamp-mote {
+  background: #fde68a;
+  box-shadow: 0 0 6px rgba(253, 230, 138, 0.6);
+  animation: mote-float ease-in-out infinite;
+}
+
 /* Hoot's speech bubble: a soft rise when his line changes */
 @keyframes bubble-in {
   from {
