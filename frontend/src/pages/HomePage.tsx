@@ -1,127 +1,94 @@
-import { lazy, Suspense, useState } from 'react'
-import { motion } from 'motion/react'
-import { SampleRun } from '../components/home/SampleRun'
-import { TopicComposer } from '../components/home/TopicComposer'
-import { HootInline, HootPerch } from '../components/hoot/HootPerch'
-import type { Theme } from '../components/TopBar'
+import { useState } from 'react'
+import { ArrowRightIcon, SparkleIcon } from '../components/icons'
+import { InkButton, Spinner } from '../components/ui'
 
-const Threads = lazy(() => import('../components/backgrounds/reactbits/Threads'))
+const DECKS = [
+  { value: 4, label: '4 Quick' },
+  { value: 8, label: '8 Standard' },
+  { value: 12, label: '12 Deep' },
+]
 
-const SPRING = { type: 'spring', stiffness: 110, damping: 22 } as const
-const VOLUMES = [4, 8, 12]
+const PITCH = 'Synthesize recent arXiv preprints into a cited review with verified references, extraction tables, and Q&A.'
 
-type HomeProps = {
+export function HomePage({
+  demoTopics,
+  onStart,
+  busy,
+}: {
   demoTopics: string[]
   onStart: (topic: string, deck: number) => void
   busy: boolean
-  animate: boolean
-  theme: Theme
-  /** Wide screens: Hoot stands on the contents card instead of the corner badge. */
-  perch: boolean
-}
-
-/**
- * Home page ("Proceedings"): the page is a bound conference-proceedings volume.
- * A committed ultramarine series band carries the title; the volume number
- * IS the paper-count control; the topic input is the label pasted onto the
- * cover, overlapping the band; the live pipeline reads as the contents.
- * Threads run densest inside the band and fade over the cover stock.
- * Direction contract: .impeccable/surfaces/frontend-src-pages-homepage-tsx.md
- */
-export function HomePage({ demoTopics, onStart, busy, animate, theme, perch }: HomeProps) {
+}) {
+  const [topic, setTopic] = useState('')
   const [deck, setDeck] = useState(8)
+  const trimmed = topic.trim()
+  const canRun = trimmed.length >= 3 && trimmed.length <= 200 && !busy
+  const tooLong = trimmed.length > 200
+
+  const submit = () => {
+    if (canRun) onStart(trimmed, deck)
+  }
+
   return (
-    <main className="pb-16">
-      <section className="relative overflow-hidden bg-band text-band-ink">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <Suspense fallback={null}>
-            <Threads color="#ffffff" accentColor="#ffffff" lineCount={90} amplitude={1.5} speed={0.35} opacity={0.32} paused={!animate} />
-          </Suspense>
-        </div>
+    <main className="mx-auto w-full max-w-3xl px-5 py-10 text-center">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
+          What would you like to explore today?
+        </h1>
+        <p className="text-sm text-mut">{PITCH}</p>
+      </div>
 
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-8 px-5 pb-24 pt-12 md:px-8 md:pt-16 lg:grid-cols-12">
-          <motion.div
-            className="lg:col-span-8"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={SPRING}
-          >
-            <h1 className="text-balance text-5xl font-extrabold leading-[0.98] tracking-tight md:text-6xl xl:text-7xl">
-              Every claim, bound to its source.
-            </h1>
-            <p className="mt-5 max-w-[48ch] text-pretty text-lg leading-relaxed opacity-85">
-              Give LitLens a research topic. It reads recent arXiv papers and writes a review with checked citations.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="lg:col-span-4 lg:justify-self-end"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...SPRING, delay: 0.08 }}
-          >
-            <div role="radiogroup" aria-label="Number of papers" className="lg:text-right">
-              <p className="font-mono text-xs opacity-80">Papers in this review</p>
-              <div className="flex items-end gap-4 lg:block">
-                <p className="mt-1 font-display text-[7rem] font-extrabold leading-none tabular-nums md:text-[8.5rem]">
-                  {String(deck).padStart(2, '0')}
-                </p>
-                {/* Narrow screens: Hoot stands beside the volume number (no corner badge here). */}
-                {!perch && <HootInline theme={theme} animate={animate} />}
-              </div>
-              <div className="mt-3 inline-flex gap-1.5">
-                {VOLUMES.map((v) => {
-                  const on = v === deck
-                  return (
-                    <button
-                      key={v}
-                      type="button"
-                      role="radio"
-                      aria-checked={on}
-                      aria-label={`${v} papers`}
-                      onClick={() => setDeck(v)}
-                      className={`rounded-lg px-3 py-1.5 font-mono text-sm font-semibold transition active:scale-[0.97] ${
-                        on ? 'bg-band-ink text-band' : 'ring-1 ring-inset ring-band-ink/45 hover:ring-band-ink'
-                      }`}
-                    >
-                      {String(v).padStart(2, '0')}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <div className="relative mx-auto -mt-14 grid max-w-7xl grid-cols-1 gap-10 px-5 md:px-8 lg:grid-cols-12">
-        <motion.div
-          className="lg:col-span-7"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...SPRING, delay: 0.14 }}
-        >
-          <TopicComposer
-            deck={deck}
-            onDeckChange={setDeck}
-            onStart={onStart}
-            busy={busy}
-            demoTopics={demoTopics}
-            align="left"
-            hideDeck
-          />
-        </motion.div>
-        <motion.div
-          className="lg:col-span-5 lg:pt-20"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...SPRING, delay: 0.2 }}
-        >
-          <div className="relative">
-            {perch && <HootPerch theme={theme} animate={animate} />}
-            <SampleRun animate={animate} />
+      <div className="mt-8 rounded-xl border border-edge bg-field p-4 text-left shadow-book transition-all focus-within:border-amb-line focus-within:shadow-[var(--focus-ring)]">
+        <textarea
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          rows={3}
+          placeholder="e.g. Graph neural networks for molecular property prediction and drug discovery…"
+          className="w-full resize-none bg-transparent text-base font-medium text-ink outline-none placeholder:text-faint"
+        />
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-edge2 pt-3">
+          <div className="inline-flex items-center gap-1 rounded-full border border-edge bg-card p-1 text-xs">
+            {DECKS.map((d) => (
+              <button
+                key={d.value}
+                type="button"
+                onClick={() => setDeck(d.value)}
+                className={`rounded-full px-2.5 py-1 font-semibold transition ${
+                  deck === d.value
+                    ? 'bg-amb-soft text-amb ring-1 ring-inset ring-amb-line'
+                    : 'text-faint hover:text-txt'
+                }`}
+              >
+                {d.label}
+              </button>
+            ))}
           </div>
-        </motion.div>
+
+          <InkButton onClick={submit} disabled={busy}>
+            {busy ? <Spinner className="h-4 w-4 border-slate-400 border-t-slate-950" /> : <span>Run Review</span>}
+            {!busy && <ArrowRightIcon className="h-4 w-4" />}
+          </InkButton>
+        </div>
+        {tooLong && <p className="mt-2 text-xs text-rose">Topic is too long (max 200 characters).</p>}
+      </div>
+
+      <div className="mt-6">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-faint">
+          try a demo topic
+        </p>
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
+          {demoTopics.map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTopic(t)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1.5 text-xs font-medium text-mut transition hover:border-amb-line hover:text-amb"
+            >
+              <SparkleIcon className="h-3 w-3 text-amb-dot" />
+              {t}
+            </button>
+          ))}
+        </div>
       </div>
     </main>
   )

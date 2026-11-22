@@ -233,27 +233,3 @@ export function MoonIcon(props: IconProps) {
     </Svg>
   )
 }
-
-/** Three linked nodes: animations on. */
-export function MotionIcon(props: IconProps) {
-  return (
-    <Svg {...props}>
-      <circle cx="5" cy="17" r="2" />
-      <circle cx="12" cy="6" r="2" />
-      <circle cx="19" cy="15" r="2" />
-      <path d="M6.1 15.3 10.9 7.7M13.7 7.3l4 5.9M7 17.2l10-.9" />
-    </Svg>
-  )
-}
-
-/** Same nodes, struck through: animations off. */
-export function MotionOffIcon(props: IconProps) {
-  return (
-    <Svg {...props}>
-      <circle cx="5" cy="17" r="2" />
-      <circle cx="12" cy="6" r="2" />
-      <circle cx="19" cy="15" r="2" />
-      <path d="M3 3l18 18" />
-    </Svg>
-  )
-}

@@ -20,4 +20,4 @@ Raises from declined challengers: Riley moire (threads densest inside the band, 
 Alternates built for comparison: Preprint (impeccable's pick, position 1; risk: familiar academic look) and Cards (challenger pop-culture-shelf-wax-pack-card, verdict competitive on product clarity).
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-Unresolved: finish review and DESIGN.md for the Proceedings world are still owed.
+Status (2026-11-22): the user restored the PR #2 UI (amber study desk, Plus Jakarta Sans) and is iterating on that instead. The Proceedings build is preserved in git at commit 7c4336c; this contract describes it, not the current UI.

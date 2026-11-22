@@ -52,7 +52,7 @@ function WeakClaims({ review }: { review: ReviewResult }) {
   const claims = review.verification?.weak_claims ?? []
   if (claims.length === 0) return null
   return (
-    <div className="rounded-xl border border-rose-line bg-rose-soft p-4">
+    <div className="rounded-xl border-l-4 border-rose-line bg-rose-soft p-4">
       <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose">
         <AlertIcon className="h-4 w-4" /> Weakly supported claims
       </div>
@@ -189,7 +189,7 @@ function ChunkInspector({ papers }: { papers: Paper[] }) {
             </span>
           </div>
           <p className="mt-1 font-mono text-[10px] text-faint">arXiv:{p.arxiv_id} · {p.primary_category}</p>
-          <p className="mt-2 rounded-lg border border-amb-line bg-amb-soft/40 p-3 text-xs leading-relaxed text-mut">
+          <p className="mt-2 rounded-lg border-l-2 border-amb-line bg-amb-soft/40 p-3 text-xs leading-relaxed text-mut">
             {p.abstract}
           </p>
           <a href={p.url_abs} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-amb hover:text-ink">

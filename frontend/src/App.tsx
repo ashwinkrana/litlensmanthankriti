@@ -1,15 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { createReview, getDemoTopics, getReview } from './api/client'
-import { useMotionPref } from './lib/motionPref'
-import { HootProvider } from './lib/hoot'
-import { hootForRun, type HootLine } from './lib/hootContext'
-import { useMediaQuery } from './lib/useMediaQuery'
 import { subscribeToJob } from './api/sse'
 import type { ReviewResult, StageEvent } from './api/types'
 import { TopBar, type Theme } from './components/TopBar'
-import { HootAvatar } from './components/hoot/HootAvatar'
-import { AppBackground } from './components/backgrounds/AppBackground'
+import { MascotBuddy } from './components/MascotBuddy'
+import { hootForRun, type HootLine } from './lib/hootMood'
 import { HomePage } from './pages/HomePage'
 import { ResultsPage } from './pages/ResultsPage'
 import { RunPage } from './pages/RunPage'
@@ -42,7 +37,6 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [runError, setRunError] = useState<string | null>(null)
   const [celebrate, setCelebrate] = useState(false)
-  const [motionOn, setMotionOn] = useMotionPref()
 
   const closeStream = useRef<(() => void) | null>(null)
 
@@ -84,11 +78,9 @@ export default function App() {
     setPhase('home')
   }, [])
 
-  const wide = useMediaQuery('(min-width: 1024px)')
-
-  // What Hoot is doing, from the app's real state.
-  const hootBase: HootLine = runError
-    ? { mood: 'sad', caption: 'That run did not finish. Try again, or pick a demo topic.' }
+  // What Hoot is doing, from the app's real state (pipeline stage, results, failure).
+  const hoot: HootLine = runError
+    ? { mood: 'error', caption: 'That run did not finish. Try again, or pick a demo topic.' }
     : phase === 'running'
       ? hootForRun(events)
       : phase === 'results'
@@ -139,66 +131,33 @@ export default function App() {
   )
 
   return (
-    <MotionConfig reducedMotion={motionOn ? 'never' : 'always'}>
-      <HootProvider base={hootBase}>
-      <AppBackground theme={theme} animate={motionOn} />
+    <div className="flex min-h-screen flex-col">
+      <TopBar theme={theme} onThemeChange={setTheme} onHome={goHome} />
 
-      <div className="relative z-10 flex min-h-screen flex-col">
-        <TopBar
-          theme={theme}
-          onThemeChange={setTheme}
-          motion={motionOn}
-          onMotionChange={setMotionOn}
-          onHome={goHome}
-        />
+      <div className="flex-1">
+        {phase === 'home' && (
+          <>
+            {runError && (
+              <div className="mx-auto mt-4 w-full max-w-3xl px-5">
+                <p className="rounded-xl border-l-4 border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
+                  {runError}
+                </p>
+              </div>
+            )}
+            <HomePage demoTopics={demoTopics} onStart={start} busy={busy} />
+          </>
+        )}
 
-        <div className="flex-1">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={phase}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {phase === 'home' && (
-                <>
-                  {runError && (
-                    <div className="mx-auto mt-4 w-full max-w-3xl px-5">
-                      <p className="flex items-center gap-3 rounded-xl border border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
-                        <HootAvatar mood="sad" size={36} />
-                        <span>{runError}</span>
-                      </p>
-                    </div>
-                  )}
-                  <HomePage
-                    animate={motionOn}
-                    theme={theme}
-                    perch={wide}
-                    demoTopics={demoTopics}
-                    onStart={start}
-                    busy={busy}
-                  />
-                </>
-              )}
+        {phase === 'running' && <RunPage topic={topic} events={events} />}
 
-              {phase === 'running' && (
-                <RunPage topic={topic} events={events} theme={theme} animate={motionOn} wide={wide} />
-              )}
-
-              {phase === 'results' && review && (
-                <ResultsPage review={review} theme={theme} animate={motionOn} wide={wide} />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <footer className="border-t border-edge2 px-5 py-4 text-center text-xs text-faint">
-          {FOOTER} · job {jobId ? jobId.slice(0, 8) : '—'}
-        </footer>
-
+        {phase === 'results' && review && <ResultsPage review={review} />}
       </div>
-      </HootProvider>
-    </MotionConfig>
+
+      <footer className="border-t border-edge2 px-5 py-4 text-center text-xs text-faint">
+        {FOOTER} · job {jobId ? jobId.slice(0, 8) : '—'}
+      </footer>
+
+      <MascotBuddy status={hoot.mood} caption={hoot.caption} docked={phase !== 'home'} />
+    </div>
   )
 }

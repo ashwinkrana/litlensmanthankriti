@@ -1,51 +1,39 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------ */
-/* LitLens "Proceedings": the app as a bound conference-proceedings    */
-/* volume. Cover-stock ground, one committed ultramarine series colour,*/
-/* navy-ink grotesk (Schibsted Grotesk) with Geist Mono for metadata.  */
+/* LitLens — Academic Research Companion · LIGHT + DARK themes          */
 /*                                                                     */
 /* Rule: the `@theme` block defines the LIGHT values (the default).    */
-/* The `.dark` class overrides every token with DARK values. App.tsx   */
+/* The `.dark` class overrides EVERY token with DARK values. App.tsx   */
 /* adds/removes `.dark` on <html> when the user toggles the theme.     */
-/* The token names amb-* are historical: they hold the accent colour.  */
 /* ------------------------------------------------------------------ */
 
 @theme {
-  --font-sans: 'Schibsted Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Schibsted Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Geist Mono Variable', ui-monospace, 'Cascadia Mono', monospace;
+  --font-sans: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Fira Code', monospace;
   --font-hand: 'Caveat', cursive;
 
-  /* ---- Primary action (filled button) ---- */
-  --color-cta: #2338c9;
-  --color-cta-ink: #ffffff;
-  /* ---- Full-bleed series band (home hero) ---- */
-  --color-band: #2338c9;
-  --color-band-ink: #ffffff;
-
   /* ---- Surfaces (LIGHT) ---- */
-  --color-app: #f4f5f2; /* cover stock */
-  --color-dot: #dfe2ea;
-  --color-card: #ffffff;
-  --color-card2: #eceef4; /* elevated / hover */
-  --color-field: #ffffff; /* text inputs */
-  --color-edge: #c9cedc; /* borders */
-  --color-edge2: #e1e4ec; /* dividers */
+  --color-app: #fff8f5;        /* page canvas */
+  --color-dot: #e2e8f0;        /* grid dots */
+  --color-card: #ffffff;        /* card surface */
+  --color-card2: #fcf2eb;       /* elevated / hover */
+  --color-field: #ffffff;       /* text inputs */
+  --color-edge: #0f172a;        /* strong borders */
+  --color-edge2: #cbd5e1;       /* dividers */
 
   /* ---- Ink (LIGHT) ---- */
-  --color-ink: #0c1240; /* headings / strongest */
-  --color-txt: #2a3158; /* body */
-  --color-mut: #565d7d; /* secondary */
-  --color-faint: #7d84a0; /* tertiary */
+  --color-ink: #0f172a;         /* headings / strongest */
+  --color-txt: #334155;         /* body */
+  --color-mut: #64748b;         /* secondary */
+  --color-faint: #94a3b8;       /* tertiary */
 
-  /* ---- Accent: ultramarine (LIGHT) ---- */
-  --color-amb-soft: #e3e7ff;
-  --color-amb-line: #b3bcf5;
-  --color-amb: #1a2aa6;
-  --color-amb-dot: #2338c9;
+  /* ---- Accents (LIGHT) ---- */
+  --color-amb-soft: #fef08a;
+  --color-amb-line: #fde047;
+  --color-amb: #0f172a;
+  --color-amb-dot: #ca8a04;
 
-  /* ---- Status colours (unchanged semantics) ---- */
   --color-mint-soft: #86efac;
   --color-mint-line: #4ade80;
   --color-mint: #166534;
@@ -66,38 +54,33 @@
   --color-purp: #6d28d9;
   --color-purp-dot: #9333ea;
 
-  /* ---- Shadows (LIGHT): soft and tinted, never hard offsets ---- */
-  --shadow-book: 0 1px 2px rgba(12, 18, 64, 0.06), 0 4px 12px rgba(12, 18, 64, 0.05);
-  --shadow-book-lift: 0 12px 32px -12px rgba(12, 18, 64, 0.28);
-  --shadow-book-overlay: 0 20px 44px -14px rgba(12, 18, 64, 0.34);
+  /* ---- Shadows (LIGHT) ---- */
+  --shadow-book: 2px 3px 0 0 rgba(15, 23, 42, 0.08);
+  --shadow-book-lift: 4px 6px 0 0 rgba(15, 23, 42, 0.14);
+  --shadow-book-overlay: 6px 10px 0 0 rgba(15, 23, 42, 0.2);
 }
 
 .dark {
-  --color-cta: #7d8bff;
-  --color-cta-ink: #0a0e24;
-  --color-band: #18206a;
-  --color-band-ink: #eef0ff;
-
-  /* ---- Surfaces (DARK): the navy volume ---- */
-  --color-app: #0a0e24;
-  --color-dot: #1a2142;
-  --color-card: #11173a;
-  --color-card2: #182050;
-  --color-field: #0d1230;
-  --color-edge: #2a336e;
-  --color-edge2: #1b2350;
+  /* ---- Surfaces (DARK) ---- */
+  --color-app: #0b0f17;
+  --color-dot: #1c2738;
+  --color-card: #131b26;
+  --color-card2: #1c2738;
+  --color-field: #0e1520;
+  --color-edge: #233144;
+  --color-edge2: #1e2a3c;
 
   /* ---- Ink (DARK) ---- */
-  --color-ink: #eef0ff;
-  --color-txt: #c8ccec;
-  --color-mut: #9198c4;
-  --color-faint: #6f76a6;
+  --color-ink: #f8fafc;
+  --color-txt: #cbd5e1;
+  --color-mut: #94a3b8;
+  --color-faint: #64748b;
 
-  /* ---- Accent (DARK) ---- */
-  --color-amb-soft: rgba(125, 139, 255, 0.16);
-  --color-amb-line: rgba(125, 139, 255, 0.4);
-  --color-amb: #b4bcff;
-  --color-amb-dot: #7d8bff;
+  /* ---- Accents (DARK) ---- */
+  --color-amb-soft: rgba(251, 191, 36, 0.15);
+  --color-amb-line: rgba(251, 191, 36, 0.3);
+  --color-amb: #fcd34d;
+  --color-amb-dot: #fbbf24;
 
   --color-mint-soft: rgba(52, 211, 153, 0.15);
   --color-mint-line: rgba(52, 211, 153, 0.4);
@@ -121,19 +104,19 @@
 
   /* ---- Shadows (DARK) ---- */
   --shadow-book: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-book-lift: 0 14px 34px rgba(0, 0, 0, 0.5);
-  --shadow-book-overlay: 0 22px 48px rgba(0, 0, 0, 0.6);
+  --shadow-book-lift: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-book-overlay: 0 20px 48px rgba(0, 0, 0, 0.6);
 }
 
 :root {
   color-scheme: light;
-  --glow-amb: 0 0 0 1px rgba(35, 56, 201, 0.5);
-  --focus-ring: 0 0 0 3px rgba(35, 56, 201, 0.28);
+  --glow-amb: 0 0 0 1px rgba(251, 191, 36, 0.55), 0 0 14px rgba(251, 191, 36, 0.25);
+  --focus-ring: 0 0 0 2px #fde047;
 }
 .dark {
   color-scheme: dark;
-  --glow-amb: 0 0 0 1px rgba(125, 139, 255, 0.55);
-  --focus-ring: 0 0 0 3px rgba(125, 139, 255, 0.35);
+  --glow-amb: 0 0 14px rgba(251, 191, 36, 0.25);
+  --focus-ring: 0 0 0 1px rgba(251, 191, 36, 0.7), 0 0 18px rgba(251, 191, 36, 0.18);
 }
 
 html,
@@ -154,15 +137,9 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display);
-}
-
 ::selection {
-  background: var(--color-cta);
-  color: var(--color-cta-ink);
+  background: #fbbf24;
+  color: #0b0f17;
 }
 
 ::-webkit-scrollbar {
@@ -200,14 +177,14 @@ h3 {
   outline-offset: 2px;
 }
 
-/* Animations off: the OS asks for reduced motion and the user hasn't turned
-   them on, or the user switched them off with the top-bar toggle. */
-html[data-motion='off'] *,
-html[data-motion='off'] *::before,
-html[data-motion='off'] *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Focus: highlighter ring (light offset | dark glow) */
