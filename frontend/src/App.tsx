@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { createReview, getDemoTopics, getReview } from './api/client'
 import { useMotionPref } from './lib/motionPref'
@@ -6,12 +6,10 @@ import { subscribeToJob } from './api/sse'
 import type { ReviewResult, StageEvent } from './api/types'
 import { TopBar, type Theme } from './components/TopBar'
 import { MascotBuddy, type BuddyState } from './components/MascotBuddy'
+import { SilkBackground } from './components/silk/SilkBackground'
 import { HomePage } from './pages/HomePage'
 import { ResultsPage } from './pages/ResultsPage'
 import { RunPage } from './pages/RunPage'
-
-// Loaded on demand so the particle engine never delays the first paint.
-const BackgroundNetwork = lazy(() => import('./components/BackgroundNetwork'))
 
 type Phase = 'home' | 'running' | 'results'
 
@@ -132,11 +130,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion={motionOn ? 'never' : 'always'}>
-      {motionOn && (
-        <Suspense fallback={null}>
-          <BackgroundNetwork theme={theme} />
-        </Suspense>
-      )}
+      <SilkBackground theme={theme} animate={motionOn} />
 
       <div className="relative z-10 flex min-h-screen flex-col">
         <TopBar
