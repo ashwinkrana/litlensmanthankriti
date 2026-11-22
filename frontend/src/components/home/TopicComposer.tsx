@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ArrowRightIcon, SparkleIcon } from '../icons'
 import { InkButton, Spinner } from '../ui'
+import { useHoot } from '../../lib/hootContext'
 
 const DECKS = [
   { value: 4, label: '4 Quick' },
@@ -37,6 +38,7 @@ export function TopicComposer({
   hideDeck = false,
 }: ComposerProps) {
   const [topic, setTopic] = useState('')
+  const hoot = useHoot()
   const trimmed = topic.trim()
   const canRun = trimmed.length >= 3 && trimmed.length <= 200 && !busy
   const tooLong = trimmed.length > 200
@@ -54,7 +56,10 @@ export function TopicComposer({
         <textarea
           id="topic"
           value={topic}
-          onChange={(e) => setTopic(e.target.value)}
+          onChange={(e) => {
+            setTopic(e.target.value)
+            hoot.react('listening', 'Go on, I am listening.', 1800)
+          }}
           onKeyDown={(e) => {
             // Enter runs, Shift+Enter adds a new line.
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -106,7 +111,10 @@ export function TopicComposer({
               <button
                 key={t}
                 type="button"
-                onClick={() => setTopic(t)}
+                onClick={() => {
+                  setTopic(t)
+                  hoot.react('surprised', 'Good pick. Press Run review when you are ready.', 2600)
+                }}
                 className="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1.5 text-xs font-medium text-mut transition hover:border-amb-line hover:text-amb active:scale-[0.98]"
               >
                 <SparkleIcon className="h-3 w-3 text-amb-dot" />

@@ -5,6 +5,7 @@ import { askQuestion } from '../../api/client'
 import type { QASource, ReviewResult } from '../../api/types'
 import { BotIcon, ChatIcon, LinkIcon } from '../icons'
 import { IndexCard, SectionLabel, Spinner } from '../ui'
+import { useHoot } from '../../lib/hootContext'
 
 type Message = {
   id: number
@@ -70,6 +71,7 @@ export function AskPanel({ review }: { review: ReviewResult }) {
   const [question, setQuestion] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
+  const hoot = useHoot()
 
   if (!review.qa_ready) {
     return (
@@ -91,17 +93,20 @@ export function AskPanel({ review }: { review: ReviewResult }) {
     setMessages((m) => [...m, userMsg])
     setQuestion('')
     setLoading(true)
+    hoot.react('thinking', "Searching the papers' full text…", 60_000)
     try {
       const res = await askQuestion(review.job_id, { question: q })
       setMessages((m) => [
         ...m,
         { id: nextId++, role: 'assistant', content: res.answer_md, sources: res.sources },
       ])
+      hoot.react('speaking', 'Here is what the papers say, with the pages I used.', 4000)
     } catch (e) {
       setMessages((m) => [
         ...m,
         { id: nextId++, role: 'error', content: e instanceof Error ? e.message : 'Ask failed. Try again.' },
       ])
+      hoot.react('sad', 'I could not answer that one. Try rephrasing it?', 5000)
     } finally {
       setLoading(false)
     }

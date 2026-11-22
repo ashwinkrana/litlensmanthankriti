@@ -2,10 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { createReview, getDemoTopics, getReview } from './api/client'
 import { useMotionPref } from './lib/motionPref'
+import { HootProvider } from './lib/hoot'
+import { hootForRun, type HootLine } from './lib/hootContext'
+import { useMediaQuery } from './lib/useMediaQuery'
 import { subscribeToJob } from './api/sse'
 import type { ReviewResult, StageEvent } from './api/types'
 import { TopBar, type Theme } from './components/TopBar'
-import { MascotBuddy, type BuddyState } from './components/MascotBuddy'
+import { MascotBuddy } from './components/MascotBuddy'
 import { AppBackground } from './components/backgrounds/AppBackground'
 import { HomePage } from './pages/HomePage'
 import { ResultsPage } from './pages/ResultsPage'
@@ -81,11 +84,20 @@ export default function App() {
     setPhase('home')
   }, [])
 
-  const buddyStatus: BuddyState =
-    runError ? 'error'
-      : phase === 'running' ? 'working'
-        : phase === 'results' ? (celebrate ? 'celebrating' : 'idle')
-          : 'idle'
+  const wide = useMediaQuery('(min-width: 1024px)')
+  // On the home page Hoot lives in the page itself (perched, or inline on phones).
+  const hootInPage = phase === 'home'
+
+  // What Hoot is doing, from the app's real state.
+  const hootBase: HootLine = runError
+    ? { mood: 'sad', caption: 'That run did not finish. Try again, or pick a demo topic.' }
+    : phase === 'running'
+      ? hootForRun(events)
+      : phase === 'results'
+        ? celebrate
+          ? { mood: 'celebrating', caption: 'Your review is ready, and every citation is checked.' }
+          : { mood: 'idle', caption: 'Ask me anything about these papers in the Ask tab.' }
+        : { mood: 'idle', caption: 'Give me a research topic and I will find the papers.' }
 
   const start = useCallback(
     async (t: string, deck: number) => {
@@ -130,6 +142,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion={motionOn ? 'never' : 'always'}>
+      <HootProvider base={hootBase}>
       <AppBackground theme={theme} animate={motionOn} />
 
       <div className="relative z-10 flex min-h-screen flex-col">
@@ -161,6 +174,8 @@ export default function App() {
                   )}
                   <HomePage
                     animate={motionOn}
+                    theme={theme}
+                    perch={wide}
                     demoTopics={demoTopics}
                     onStart={start}
                     busy={busy}
@@ -179,8 +194,9 @@ export default function App() {
           {FOOTER} · job {jobId ? jobId.slice(0, 8) : '—'}
         </footer>
 
-        <MascotBuddy status={buddyStatus} docked={phase !== 'home'} animate={motionOn} />
+        <MascotBuddy theme={theme} docked={phase !== 'home'} hidden={hootInPage} animate={motionOn} />
       </div>
+      </HootProvider>
     </MotionConfig>
   )
 }

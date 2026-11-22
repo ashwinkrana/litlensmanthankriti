@@ -2,6 +2,8 @@ import { lazy, Suspense, useState } from 'react'
 import { motion } from 'motion/react'
 import { SampleRun } from '../components/home/SampleRun'
 import { TopicComposer } from '../components/home/TopicComposer'
+import { HootInline, HootPerch } from '../components/hoot/HootPerch'
+import type { Theme } from '../components/TopBar'
 
 const Threads = lazy(() => import('../components/backgrounds/reactbits/Threads'))
 
@@ -13,6 +15,9 @@ type HomeProps = {
   onStart: (topic: string, deck: number) => void
   busy: boolean
   animate: boolean
+  theme: Theme
+  /** Wide screens: Hoot stands on the contents card instead of the corner badge. */
+  perch: boolean
 }
 
 /**
@@ -23,7 +28,7 @@ type HomeProps = {
  * Threads run densest inside the band and fade over the cover stock.
  * Direction contract: .impeccable/surfaces/frontend-src-pages-homepage-tsx.md
  */
-export function HomePage({ demoTopics, onStart, busy, animate }: HomeProps) {
+export function HomePage({ demoTopics, onStart, busy, animate, theme, perch }: HomeProps) {
   const [deck, setDeck] = useState(8)
   return (
     <main className="pb-16">
@@ -57,9 +62,13 @@ export function HomePage({ demoTopics, onStart, busy, animate }: HomeProps) {
           >
             <div role="radiogroup" aria-label="Number of papers" className="lg:text-right">
               <p className="font-mono text-xs opacity-80">Papers in this review</p>
-              <p className="mt-1 font-display text-[7rem] font-extrabold leading-none tabular-nums md:text-[8.5rem]">
-                {String(deck).padStart(2, '0')}
-              </p>
+              <div className="flex items-end gap-4 lg:block">
+                <p className="mt-1 font-display text-[7rem] font-extrabold leading-none tabular-nums md:text-[8.5rem]">
+                  {String(deck).padStart(2, '0')}
+                </p>
+                {/* Narrow screens: Hoot stands beside the volume number (no corner badge here). */}
+                {!perch && <HootInline theme={theme} animate={animate} />}
+              </div>
               <div className="mt-3 inline-flex gap-1.5">
                 {VOLUMES.map((v) => {
                   const on = v === deck
@@ -108,7 +117,10 @@ export function HomePage({ demoTopics, onStart, busy, animate }: HomeProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...SPRING, delay: 0.2 }}
         >
-          <SampleRun animate={animate} />
+          <div className="relative">
+            {perch && <HootPerch theme={theme} animate={animate} />}
+            <SampleRun animate={animate} />
+          </div>
         </motion.div>
       </div>
     </main>
