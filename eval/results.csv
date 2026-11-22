@@ -1,0 +1,11 @@
+topic,field,status,papers_selected,papers_considered,planning_s,searching_s,ranking_s,extracting_s,synthesizing_s,verifying_s,total_s,wall_s,tokens_20b,tokens_120b,tokens_total,providers,citation_validity_pct,weak_claim_pct,uncited_sentences,extraction_completeness_pct,warnings,human_relevance_1to5
+graph neural networks for drug discovery,Machine learning / bioinformatics,done,8,25,0.0,0.0,0.6,0.0,0.0,0.5,1.1,1.1,0,0,0,cache,100.0,11.1,4,58.3,0,
+federated learning privacy attacks,Security / machine learning,done,8,25,0.0,0.0,0.7,0.0,0.0,0.7,1.4,1.4,0,0,0,cache,100.0,30.0,3,60.4,0,
+retrieval-augmented generation for question answering,Natural language processing,done,8,21,0.0,0.0,0.5,0.0,0.0,1.7,2.3,2.3,0,0,0,cache,100.0,28.6,3,64.6,0,
+crop disease detection using deep learning,Computer vision / agriculture,done,8,25,0.0,0.0,0.8,0.0,0.0,0.3,1.1,1.2,0,0,0,cache,100.0,0.0,9,66.7,0,
+zero-knowledge proofs for blockchain scalability,Cryptography / distributed systems,done,8,17,0.6,11.3,0.4,1.7,2.3,0.6,17.0,17.0,4099,2272,6371,groq,100.0,22.2,5,68.8,0,
+reinforcement learning for robot manipulation,Robotics,done,8,25,0.4,9.2,0.6,47.0,2.3,0.7,60.2,60.2,3942,2222,6164,groq,100.0,9.1,3,58.3,0,
+code generation with large language models,Software engineering,done,8,25,0.4,8.5,0.6,47.9,3.4,0.4,61.2,61.2,4190,2313,6503,groq,100.0,22.2,5,62.5,0,
+energy-efficient task scheduling in edge computing,Systems / networking,done,8,17,0.2,8.8,0.4,46.6,2.1,0.6,58.7,58.7,3914,2167,6081,groq,100.0,10.0,5,56.2,0,
+explainable AI for medical image diagnosis,Healthcare AI,done,8,25,0.5,8.0,0.6,48.4,2.3,0.7,60.4,60.4,3908,2286,6194,groq,100.0,33.3,2,62.5,0,
+adversarial attacks on autonomous driving perception,Security / computer vision,done,8,25,0.4,9.1,0.6,47.4,2.2,0.6,60.3,60.3,4301,2249,6550,groq,100.0,36.4,2,64.6,0,

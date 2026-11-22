@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 
 from app.config import Settings
 from app.llm.router import LLMRouter, build_router
+from app.pipeline.demo import DemoIndex
 from app.pipeline.jobs import JobRegistry
 from app.retrieval.embeddings import Embedder, SentenceTransformerEmbedder
 from app.retrieval.pdf import PdfFetcher
@@ -25,6 +26,7 @@ class Services:
     jobs: JobRegistry
     fetcher: PdfFetcher
     vectors: VectorStore
+    demo: DemoIndex
     # One pipeline at a time: protects the free quota and the demo laptop (DESIGN §3.8).
     pipeline_lock: asyncio.Semaphore = field(
         default_factory=lambda: asyncio.Semaphore(1)
@@ -48,4 +50,5 @@ def build_services(settings: Settings) -> Services:
             offline=settings.demo_mode,
         ),
         vectors=make_vector_store(settings.data_dir),
+        demo=DemoIndex(settings.data_dir / "demo" / "index.json"),
     )

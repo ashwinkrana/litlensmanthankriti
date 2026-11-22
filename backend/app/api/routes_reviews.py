@@ -23,6 +23,7 @@ from app.models.schemas import (
     ReviewRequest,
     ReviewResult,
 )
+from app.pipeline.demo import replay
 from app.pipeline.jobs import Job
 from app.pipeline.orchestrator import run_review
 from app.pipeline.services import Services
@@ -56,6 +57,19 @@ def _job(request: Request, job_id: str) -> Job:
 async def create_review(body: ReviewRequest, request: Request) -> JobCreated:
     client_limiter(request).check(request, "reviews")
     services = _services(request)
+    if services.settings.demo_mode:
+        # FR-52: offline replay of a pre-warmed topic; no network calls at all.
+        source_id = services.demo.lookup(body.topic)
+        source = services.jobs.get(source_id) if source_id else None
+        if source is None or source.result.status != "done":
+            raise AppError(
+                422,
+                "VALIDATION_ERROR",
+                "Offline demo mode: choose one of the demo topics.",
+            )
+        job = services.jobs.create(body)
+        services.jobs.track(asyncio.create_task(replay(job, source, services.jobs)))
+        return JobCreated(job_id=job.id)
     job = services.jobs.create(body)
     services.jobs.track(asyncio.create_task(run_review(job, services)))
     return JobCreated(job_id=job.id)
@@ -93,13 +107,19 @@ async def ask(job_id: str, body: AskRequest, request: Request) -> AskResponse:
     services = _services(request)
     try:
         return await answer(
-            job.id,
+            job.vectors_id,
             body.question,
             embedder=services.embedder,
             store=services.vectors,
             router=services.router,
         )
     except QAUnavailableError:
+        if services.settings.demo_mode:
+            raise AppError(
+                503,
+                "UPSTREAM_ERROR",
+                "Offline demo mode: only pre-warmed questions can be answered.",
+            ) from None
         raise AppError(
             503, "UPSTREAM_ERROR", "The AI service is busy. Please try again shortly."
         ) from None
