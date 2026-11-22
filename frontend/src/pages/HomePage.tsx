@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { ArrowRightIcon, SparkleIcon } from '../components/icons'
 import { InkButton, Spinner } from '../components/ui'
+import { HootSpeaker } from '../components/hoot/HootPerch'
+import { useHoot } from '../lib/hootContext'
 
 const DECKS = [
   { value: 4, label: '4 Quick' },
@@ -14,11 +16,17 @@ export function HomePage({
   demoTopics,
   onStart,
   busy,
+  animate,
+  wide,
 }: {
   demoTopics: string[]
   onStart: (topic: string, deck: number) => void
   busy: boolean
+  animate: boolean
+  /** Wide screens: Hoot's line floats beside him; phones: under him. */
+  wide: boolean
 }) {
+  const hoot = useHoot()
   const [topic, setTopic] = useState('')
   const [deck, setDeck] = useState(8)
   const trimmed = topic.trim()
@@ -30,7 +38,13 @@ export function HomePage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-5 py-10 text-center">
+    // Centred in the first screen (viewport minus top bar and footer).
+    <main className="mx-auto flex min-h-[calc(100dvh-7.5rem)] w-full max-w-3xl flex-col justify-center px-5 py-10 text-center">
+      {/* Hoot hosts the page from above the headline */}
+      <div className="mb-2 flex justify-center">
+        <HootSpeaker animate={animate} size={wide ? 132 : 108} bubble={wide ? 'right' : 'below'} floor={0.6} />
+      </div>
+
       <div className="space-y-2">
         <h1 className="text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
           What would you like to explore today?
@@ -41,7 +55,18 @@ export function HomePage({
       <div className="mt-8 rounded-xl border border-edge bg-field p-4 text-left shadow-book transition-all focus-within:border-amb-line focus-within:shadow-[var(--focus-ring)]">
         <textarea
           value={topic}
-          onChange={(e) => setTopic(e.target.value)}
+          onChange={(e) => {
+            setTopic(e.target.value)
+            hoot.react('listening', 'Go on, I am listening.', 1800)
+          }}
+          onKeyDown={(e) => {
+            // Enter runs the review; Shift+Enter adds a new line.
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              submit()
+            }
+          }}
+          aria-label="Research topic"
           rows={3}
           placeholder="e.g. Graph neural networks for molecular property prediction and drug discovery…"
           className="w-full resize-none bg-transparent text-base font-medium text-ink outline-none placeholder:text-faint"
@@ -81,7 +106,10 @@ export function HomePage({
             <button
               key={t}
               type="button"
-              onClick={() => setTopic(t)}
+              onClick={() => {
+                setTopic(t)
+                hoot.react('surprised', 'Good pick. Press Run Review when you are ready.', 2600)
+              }}
               className="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1.5 text-xs font-medium text-mut transition hover:border-amb-line hover:text-amb"
             >
               <SparkleIcon className="h-3 w-3 text-amb-dot" />

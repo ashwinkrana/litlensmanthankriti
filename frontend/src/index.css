@@ -177,14 +177,30 @@ body {
   outline-offset: 2px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+/* Animations off: the OS asks for reduced motion and the user hasn't turned
+   them on, or the user switched them off with the top-bar Motion toggle
+   (lib/motionPref.ts sets data-motion on <html>). */
+html[data-motion='off'] *,
+html[data-motion='off'] *::before,
+html[data-motion='off'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Hoot's speech bubble: a soft rise when his line changes */
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
   }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-bubble-in {
+  animation: bubble-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Focus: highlighter ring (light offset | dark glow) */

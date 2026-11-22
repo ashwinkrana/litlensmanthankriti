@@ -5,6 +5,8 @@ import { askQuestion } from '../../api/client'
 import type { QASource, ReviewResult } from '../../api/types'
 import { BotIcon, ChatIcon, LinkIcon } from '../icons'
 import { IndexCard, SectionLabel, Spinner } from '../ui'
+import { useHoot } from '../../lib/hootContext'
+import { HootAvatar } from '../hoot/HootAvatar'
 
 type Message = {
   id: number
@@ -36,6 +38,7 @@ export function AskPanel({ review }: { review: ReviewResult }) {
   const [question, setQuestion] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
+  const hoot = useHoot()
 
   if (!review.qa_ready) {
     return (
@@ -54,17 +57,20 @@ export function AskPanel({ review }: { review: ReviewResult }) {
     setMessages((m) => [...m, userMsg])
     setQuestion('')
     setLoading(true)
+    hoot.react('thinking', "Searching the papers' full text…", 60_000)
     try {
       const res = await askQuestion(review.job_id, { question: q })
       setMessages((m) => [
         ...m,
         { id: nextId++, role: 'assistant', content: res.answer_md, sources: res.sources },
       ])
+      hoot.react('speaking', 'Here is what the papers say, with the pages I used.', 4000)
     } catch (e) {
       setMessages((m) => [
         ...m,
         { id: nextId++, role: 'error', content: e instanceof Error ? e.message : 'Ask failed. Try again.' },
       ])
+      hoot.react('sad', 'I could not answer that one. Try rephrasing it?', 5000)
     } finally {
       setLoading(false)
     }
@@ -110,9 +116,15 @@ export function AskPanel({ review }: { review: ReviewResult }) {
           {messages.map((m) => (
             <div key={m.id} className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
-                <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide ${m.role === 'user' ? 'bg-card2 text-txt' : m.role === 'error' ? 'bg-rose-soft text-rose' : 'bg-amb-soft text-amb'}`}>
-                  {m.role === 'user' ? 'You' : m.role === 'error' ? 'Error' : 'LitLens'}
-                </span>
+                {m.role === 'user' ? (
+                  <span className="rounded-full bg-card2 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-txt">You</span>
+                ) : (
+                  <>
+                    {/* answers come from Hoot: a still of him speaking, or sad on an error */}
+                    <HootAvatar mood={m.role === 'error' ? 'sad' : 'speaking'} size={28} />
+                    <span className={`font-mono text-[10px] font-bold uppercase tracking-wide ${m.role === 'error' ? 'text-rose' : 'text-amb'}`}>Hoot</span>
+                  </>
+                )}
               </div>
               {m.role !== 'error' && (
                 <div className="rounded-xl border border-edge bg-card2 p-3 text-sm leading-relaxed text-txt">
