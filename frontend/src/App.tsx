@@ -15,7 +15,7 @@ import { RunPage } from './pages/RunPage'
 
 type Phase = 'home' | 'running' | 'results'
 
-const FOOTER = 'LitLens Study Desk · autonomous arXiv preprint extraction & citation-verified review builder'
+const FOOTER = 'LitLens · autonomous arXiv preprint extraction & citation-verified review builder'
 const THEME_KEY = 'litlens-theme'
 
 function initialTheme(): Theme {

@@ -1,4 +1,5 @@
-import { BookIcon, MoonIcon, MotionIcon, MotionOffIcon, SunIcon } from './icons'
+import { LogoMark } from './LogoMark'
+import { MoonIcon, MotionIcon, MotionOffIcon, SunIcon } from './icons'
 
 export type Theme = 'light' | 'dark'
 
@@ -55,18 +56,21 @@ export function TopBar({
 }) {
   return (
     <header className="sticky top-0 z-30 border-b border-edge2 bg-app/85 px-5 py-3 backdrop-blur md:px-8">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-        <button onClick={onHome} className="group flex items-center gap-3" aria-label="LitLens home">
-          <span className="flex items-center gap-2 rounded-lg border border-edge bg-card px-2.5 py-1.5 font-bold tracking-tight text-ink transition group-hover:border-amb-line">
-            <BookIcon className="h-4 w-4 text-amb-dot" />
-            <span className="text-sm">LitLens</span>
-          </span>
-          <span className="hidden rounded-full border border-amb-line bg-amb-soft px-2.5 py-0.5 font-hand text-[15px] font-semibold text-amb sm:inline">
-            study desk #04
-          </span>
+      {/* three columns so the logo stays truly centred whatever the controls' width */}
+      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-3">
+        <span aria-hidden="true" />
+
+        <button
+          type="button"
+          onClick={onHome}
+          className="group flex items-center gap-2.5 rounded-xl px-2 py-1 transition"
+          aria-label="LitLens home"
+        >
+          <LogoMark className="h-8 w-8 shadow-book transition group-hover:scale-105 group-active:scale-95" />
+          <span className="text-lg font-extrabold tracking-tight text-ink">LitLens</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-2">
           <MotionToggle on={motion} onChange={onMotionChange} />
           <ThemeToggle theme={theme} onChange={onThemeChange} />
         </div>
