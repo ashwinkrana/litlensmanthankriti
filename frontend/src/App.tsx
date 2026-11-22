@@ -1,17 +1,30 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { createReview, getDemoTopics, getReview } from './api/client'
 import { subscribeToJob } from './api/sse'
 import type { ReviewResult, StageEvent } from './api/types'
+import { PageLoader } from './components/PageLoader'
 import { TopBar, type Theme } from './components/TopBar'
 import { AppBackground } from './components/backgrounds/AppBackground'
 import { HootAvatar } from './components/hoot/HootAvatar'
+import { hideBootLoader } from './lib/boot'
 import { HootProvider } from './lib/hoot'
 import { hootForRun, type HootLine } from './lib/hootContext'
 import { useMotionPref } from './lib/motionPref'
 import { useMediaQuery } from './lib/useMediaQuery'
 import { HomePage } from './pages/HomePage'
-import { ResultsPage } from './pages/ResultsPage'
-import { RunPage } from './pages/RunPage'
+
+// The run and results pages (and the Markdown renderer the results need) load
+// on demand, so the home page arrives in a smaller first download. They are
+// prefetched while you're on the home page, so switching rarely waits.
+const loadRunPage = () => import('./pages/RunPage')
+const loadResultsPage = () => import('./pages/ResultsPage')
+const RunPage = lazy(() => loadRunPage().then((m) => ({ default: m.RunPage })))
+const ResultsPage = lazy(() => loadResultsPage().then((m) => ({ default: m.ResultsPage })))
+
+function prefetchPages(): void {
+  void loadRunPage()
+  void loadResultsPage()
+}
 
 type Phase = 'home' | 'running' | 'results'
 
@@ -45,6 +58,19 @@ export default function App() {
   const wide = useMediaQuery('(min-width: 1024px)')
 
   const closeStream = useRef<(() => void) | null>(null)
+
+  // First paint is in: fade out the boot loader, then fetch the other pages
+  // in the background once the browser is idle.
+  useEffect(() => {
+    hideBootLoader()
+    const idle = window.requestIdleCallback
+    if (idle) {
+      const id = idle(prefetchPages, { timeout: 3000 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const t = setTimeout(prefetchPages, 1500)
+    return () => clearTimeout(t)
+  }, [])
 
   // Apply theme class + persist.
   useEffect(() => {
@@ -102,6 +128,7 @@ export default function App() {
       setEvents([])
       setReview(null)
       setTopic(t)
+      prefetchPages()
       try {
         const job = await createReview({ topic: t, max_papers: deck })
         setJobId(job.job_id)
@@ -158,9 +185,11 @@ export default function App() {
           </>
         )}
 
-        {phase === 'running' && <RunPage topic={topic} events={events} animate={motionOn} wide={wide} theme={theme} />}
+        <Suspense fallback={<PageLoader label={phase === 'results' ? 'Opening the review' : 'Starting the run'} />}>
+          {phase === 'running' && <RunPage topic={topic} events={events} animate={motionOn} wide={wide} theme={theme} />}
 
-        {phase === 'results' && review && <ResultsPage review={review} animate={motionOn} wide={wide} theme={theme} />}
+          {phase === 'results' && review && <ResultsPage review={review} animate={motionOn} wide={wide} theme={theme} />}
+        </Suspense>
       </div>
 
       <footer className="border-t border-edge2 px-5 py-4 text-center text-xs text-faint">

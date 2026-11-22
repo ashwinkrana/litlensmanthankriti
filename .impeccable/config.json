@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "frontend/index.html"
+        ],
+        "createdAt": "2026-11-22T22:12:11.633Z",
+        "reason": "agent: the only looping translate in index.html is the boot loader's indeterminate progress bar (no content scrolls); it is removed once the app paints"
+      }
+    ]
+  }
+}
