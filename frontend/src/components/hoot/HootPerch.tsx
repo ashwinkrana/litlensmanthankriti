@@ -1,5 +1,6 @@
 import { useHoot } from '../../lib/hootContext'
 import type { Theme } from '../TopBar'
+import { BranchFigure } from './BranchFigure'
 import { HootFigure } from './HootFigure'
 
 type Bubble = 'left' | 'right' | 'below' | 'none'
@@ -95,7 +96,9 @@ export function HootOnBranch({ animate, theme, size = 300, className = '' }: { a
   const { mood, caption } = useHoot()
   return (
     <div className={`pointer-events-none absolute right-0 ${className}`} style={{ width: size, height: size }}>
-      <HootFigure mood={mood} animate={animate} theme={theme} perched floor={0} className="h-full w-full" />
+      {/* the branch (frozen) underneath, Hoot on top with identical framing */}
+      <BranchFigure theme={theme} className="absolute inset-0" />
+      <HootFigure mood={mood} animate={animate} theme={theme} perched floor={0} className="pointer-events-auto absolute inset-0" />
       <p
         key={caption}
         aria-live="polite"
