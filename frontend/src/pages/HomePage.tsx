@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState, type CSSProperties } from 'react'
 import { ArrowRightIcon, SparkleIcon } from '../components/icons'
 import { InkButton, Spinner } from '../components/ui'
 import { HootSpeaker } from '../components/hoot/HootPerch'
 import { useHoot } from '../lib/hootContext'
+import { useCursorParallax } from '../lib/useCursorParallax'
+
+// Parallax depth per layer, in px at the window's edge: subtle, deeper = further forward.
+const depth = (px: number) => ({ '--depth': px }) as CSSProperties
 
 const DECKS = [
   { value: 4, label: '4 Quick' },
@@ -27,6 +31,8 @@ export function HomePage({
   wide: boolean
 }) {
   const hoot = useHoot()
+  const stage = useRef<HTMLElement>(null)
+  useCursorParallax(stage, animate)
   const [topic, setTopic] = useState('')
   const [deck, setDeck] = useState(8)
   const trimmed = topic.trim()
@@ -39,20 +45,21 @@ export function HomePage({
 
   return (
     // Centred in the first screen (viewport minus top bar and footer).
-    <main className="mx-auto flex min-h-[calc(100dvh-7.5rem)] w-full max-w-3xl flex-col justify-center px-5 py-10 text-center">
+    <main ref={stage} className="mx-auto flex min-h-[calc(100dvh-7.5rem)] w-full max-w-3xl flex-col justify-center px-5 py-10 text-center">
       {/* Hoot hosts the page from above the headline */}
       <div className="mb-2 flex justify-center">
         <HootSpeaker animate={animate} size={wide ? 132 : 108} bubble={wide ? 'right' : 'below'} floor={0.6} />
       </div>
 
-      <div className="space-y-2">
+      <div className="parallax space-y-2" style={depth(6)}>
         <h1 className="text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
           What would you like to explore today?
         </h1>
         <p className="text-sm text-mut">{PITCH}</p>
       </div>
 
-      <div className="mt-8 rounded-xl border border-edge bg-field p-4 text-left shadow-book transition-all focus-within:border-amb-line focus-within:shadow-[var(--focus-ring)]">
+      <div className="parallax mt-8" style={depth(9)}>
+      <div className="rounded-xl border border-edge bg-field p-4 text-left shadow-book transition-all focus-within:border-amb-line focus-within:shadow-[var(--focus-ring)]">
         <textarea
           value={topic}
           onChange={(e) => {
@@ -96,8 +103,9 @@ export function HomePage({
         </div>
         {tooLong && <p className="mt-2 text-xs text-rose">Topic is too long (max 200 characters).</p>}
       </div>
+      </div>
 
-      <div className="mt-6">
+      <div className="parallax mt-6" style={depth(13)}>
         <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-faint">
           try a demo topic
         </p>

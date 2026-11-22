@@ -188,6 +188,17 @@ html[data-motion='off'] *::after {
   transition-duration: 0.01ms !important;
 }
 
+/* Subtle cursor parallax (lib/useCursorParallax.ts sets --px/--py on a parent).
+   Each layer moves --depth px at most; deeper layers move more. */
+.parallax {
+  transform: translate3d(
+    calc(var(--px, 0) * var(--depth, 0) * 1px),
+    calc(var(--py, 0) * var(--depth, 0) * 1px),
+    0
+  );
+  will-change: transform;
+}
+
 /* Hoot's speech bubble: a soft rise when his line changes */
 @keyframes bubble-in {
   from {

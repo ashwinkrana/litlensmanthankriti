@@ -35,7 +35,8 @@ export const owl: CharacterSpec = {
   bones: [
     { name: 'body', pivot: [0, 0, 0], drive: { ry: [['yaw', 0.25]], rz: [['roll', 0.3]], rx: [['pitch', -0.12]] } },
     { name: 'head', parent: 'body', pivot: [0, 0.56, 0], drive: { rx: [['pitch', -0.9]], ry: [['yaw', 0.8]], rz: [['roll', 0.7]] } },
-    { name: 'beak', parent: 'head', pivot: [0, 0.07, 0.3], drive: { rx: [['talk', 0.35]] } },
+    // the beak hinges at its top; a negative talk angle swings the tip forward, away from the face
+    { name: 'beak', parent: 'head', pivot: [0, 0.05, 0.3], drive: { rx: [['talk', -0.22]] } },
     { name: 'tuftL', parent: 'head', pivot: [-0.2, 0.36, 0.04], jiggle: { axis: [0, 1, 0], length: 0.12, freq: 2.6, damping: 0.14 } },
     { name: 'tuftR', parent: 'head', pivot: [0.2, 0.36, 0.04], jiggle: { axis: [0, 1, 0], length: 0.12, freq: 2.6, damping: 0.14 } },
     { name: 'tassel', parent: 'head', pivot: [0.22, 0.53, 0.08], jiggle: { axis: [0, -1, 0], length: 0.16, freq: 2.2, damping: 0.1, maxAngle: 0.7 } },
@@ -59,7 +60,7 @@ export const owl: CharacterSpec = {
     { bone: 'tuftL', shape: 'roundCone', from: [0, -0.04, 0], to: [-0.07, 0.1, -0.01], r1: 0.06, r2: 0.022, blend: 0.04, material: 'feather' },
     { bone: 'tuftR', shape: 'roundCone', from: [0, -0.04, 0], to: [0.07, 0.1, -0.01], r1: 0.06, r2: 0.022, blend: 0.04, material: 'feather' },
     /* small hooked beak between the eyes */
-    { bone: 'beak', shape: 'roundCone', from: [0, 0.01, 0.0], to: [0, -0.07, 0.05], r1: 0.052, r2: 0.014, material: 'beak' },
+    { bone: 'beak', shape: 'roundCone', from: [0, 0.01, 0.0], to: [0, -0.07, 0.05], r1: 0.046, r2: 0.013, material: 'beak' },
     /* round glasses: a ring in front of each eye and a bridge */
     { bone: 'head', shape: 'frame', at: [-0.13, 0.15, 0.335], rot: [0, -0.4, 0], half: [0.1, 0.1], corner: 0.1, width: 0.02, depth: 0.016, material: 'rims' },
     { bone: 'head', shape: 'frame', at: [0.13, 0.15, 0.335], rot: [0, 0.4, 0], half: [0.1, 0.1], corner: 0.1, width: 0.02, depth: 0.016, material: 'rims' },
