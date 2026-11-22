@@ -61,9 +61,9 @@ export const owl: CharacterSpec = {
     /* small hooked beak between the eyes */
     { bone: 'beak', shape: 'roundCone', from: [0, 0.01, 0.0], to: [0, -0.07, 0.05], r1: 0.052, r2: 0.014, material: 'beak' },
     /* round glasses: a ring in front of each eye and a bridge */
-    { bone: 'head', shape: 'frame', at: [-0.13, 0.15, 0.335], half: [0.1, 0.1], corner: 0.1, width: 0.014, depth: 0.01, material: 'rims' },
-    { bone: 'head', shape: 'frame', at: [0.13, 0.15, 0.335], half: [0.1, 0.1], corner: 0.1, width: 0.014, depth: 0.01, material: 'rims' },
-    { bone: 'head', shape: 'capsule', at: [0, 0, 0.03], from: [-0.035, 0.17, 0.33], to: [0.035, 0.17, 0.33], radius: 0.011, material: 'rims' },
+    { bone: 'head', shape: 'frame', at: [-0.13, 0.15, 0.335], rot: [0, -0.4, 0], half: [0.1, 0.1], corner: 0.1, width: 0.02, depth: 0.016, material: 'rims' },
+    { bone: 'head', shape: 'frame', at: [0.13, 0.15, 0.335], rot: [0, 0.4, 0], half: [0.1, 0.1], corner: 0.1, width: 0.02, depth: 0.016, material: 'rims' },
+    { bone: 'head', shape: 'capsule', at: [0, 0, 0.03], from: [-0.035, 0.17, 0.33], to: [0.035, 0.17, 0.33], radius: 0.015, material: 'rims' },
     /* mortarboard: a skull cap, a flat board tipped slightly toward the camera, a button */
     { bone: 'head', shape: 'cylinder', at: [0, 0.44, -0.01], radius: 0.18, half: 0.05, round: 0.03, material: 'cap' },
     { bone: 'head', shape: 'roundBox', at: [0, 0.51, -0.01], rot: [0.18, 0.6, 0], half: [0.25, 0.018, 0.25], round: 0.012, material: 'cap' },
@@ -129,11 +129,11 @@ export const owl: CharacterSpec = {
       wingL: { rz: [-0.16, 0.12, 2.3, 0] },
       wingR: { rz: [0.16, 0.12, 2.3, 1.2] },
     },
-    /* reading hard: head bobbing over the work, wing tips turning pages */
+    /* reading: a slow nod over the work, wing tips turning pages (kept slow: fast loops look like glitches) */
     working: {
-      head: { rx: [0.14, 0.06, 4.5, 0] },
-      wingL: { rz: [-0.4, 0.16, 5, 0], rx: -0.6 },
-      wingR: { rz: [0.4, 0.16, 5, Math.PI], rx: -0.6 },
+      head: { rx: [0.12, 0.04, 1.4, 0] },
+      wingL: { rz: [-0.35, 0.1, 1.8, 0], rx: -0.5 },
+      wingR: { rz: [0.35, 0.1, 1.8, Math.PI], rx: -0.5 },
     },
     error: { wingL: { rz: [-1.0, 0.1, 12, 0] }, wingR: { rz: [1.0, 0.1, 12, 1] }, tuftL: { rz: -0.35 }, tuftR: { rz: 0.35 } },
     surprised: { wingL: { rz: -1.6 }, wingR: { rz: 1.6 }, tuftL: { rz: -0.45 }, tuftR: { rz: 0.45 }, head: { rx: -0.12 } },
