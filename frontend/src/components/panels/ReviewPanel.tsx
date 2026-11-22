@@ -138,7 +138,7 @@ function BenchmarkMatrix({ review }: { review: ReviewResult }) {
     <IndexCard className="overflow-hidden">
       <div className="flex items-center justify-between border-b border-edge2 bg-field px-4 py-3">
         <span className="font-mono text-xs font-semibold text-txt">Empirical benchmark matrix</span>
-        <span className="font-normal text-faint">extracted metrics</span>
+        <span className="font-mono text-[11px] text-faint">extracted metrics</span>
       </div>
       <table className="w-full text-left text-xs">
         <thead className="border-b border-edge2 bg-field/60 text-faint">
@@ -177,22 +177,22 @@ function ChunkInspector({ papers }: { papers: Paper[] }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <SectionLabel>Retrieved source chunks &amp; PDF inspector</SectionLabel>
-        <Badge>{top.length} chunks</Badge>
+        <SectionLabel>Most relevant sources</SectionLabel>
+        <Badge>top {top.length} · abstracts</Badge>
       </div>
       {top.map((p) => (
         <IndexCard key={p.ref} className="p-4">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-bold text-ink">[{p.ref}] {shortAuthors(p.authors)}</span>
             <span className="rounded-full border border-mint-line bg-mint-soft px-2 py-0.5 font-mono text-[10px] font-semibold text-mint">
-              {(p.relevance * 100).toFixed(0)}% match
+              {(p.relevance * 100).toFixed(0)}% relevance
             </span>
           </div>
           <p className="mt-1 font-mono text-[10px] text-faint">arXiv:{p.arxiv_id} · {p.primary_category}</p>
           <p className="mt-2 rounded-lg border-l-2 border-amb-line bg-amb-soft/40 p-3 text-xs leading-relaxed text-mut">
             {p.abstract}
           </p>
-          <a href={p.url_abs} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-amb hover:text-amb">
+          <a href={p.url_abs} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-amb hover:text-ink">
             <LinkIcon className="h-3.5 w-3.5" /> Open arXiv
           </a>
         </IndexCard>

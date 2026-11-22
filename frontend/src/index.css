@@ -172,6 +172,22 @@ body {
   box-shadow: var(--shadow-book-overlay);
 }
 
+/* Keyboard focus for every interactive element (mouse clicks don't show it). */
+:is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-amb-dot);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Focus: highlighter ring (light offset | dark glow) */
 .glow-focus:focus {
   outline: none;

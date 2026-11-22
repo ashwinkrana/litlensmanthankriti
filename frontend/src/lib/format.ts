@@ -36,8 +36,9 @@ export function percent01(x: number): string {
 /** Strip light Markdown and return the first sentence or two for a callout. */
 export function leadFinding(markdown: string, maxSentences = 2): string {
   const plain = markdown
-    .replace(/[#*`>~|]+/g, '')
-    .replace(/\[(\d+)\]/g, '')
+    .replace(/^\s*#{1,6}\s.*$/gm, '') // drop headings like "## Overview"
+    .replace(/[*`>~|]+/g, '')
+    .replace(/\s*\[\d+\]/g, '') // citation markers plus the space before them
     .replace(/\s+/g, ' ')
     .trim()
   const sentences = plain.split(/(?<=[.!?])\s+/).filter(Boolean)

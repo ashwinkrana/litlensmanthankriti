@@ -15,8 +15,12 @@ const THEME_KEY = 'litlens-theme'
 
 function initialTheme(): Theme {
   if (typeof window === 'undefined') return 'dark'
-  const stored = window.localStorage.getItem(THEME_KEY)
-  if (stored === 'light' || stored === 'dark') return stored
+  try {
+    const stored = window.localStorage.getItem(THEME_KEY)
+    if (stored === 'light' || stored === 'dark') return stored
+  } catch {
+    /* storage blocked (private mode): fall through */
+  }
   // No stored preference: respect the OS theme, defaulting to dark.
   return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
 }
@@ -40,7 +44,11 @@ export default function App() {
     const root = document.documentElement
     root.classList.toggle('dark', theme === 'dark')
     root.dataset.theme = theme
-    window.localStorage.setItem(THEME_KEY, theme)
+    try {
+      window.localStorage.setItem(THEME_KEY, theme)
+    } catch {
+      /* non-fatal */
+    }
   }, [theme])
 
   useEffect(() => {
@@ -143,7 +151,7 @@ export default function App() {
         {FOOTER} · job {jobId ? jobId.slice(0, 8) : '—'}
       </footer>
 
-      <MascotBuddy status={buddyStatus} />
+      <MascotBuddy status={buddyStatus} docked={phase !== 'home'} />
     </div>
   )
 }

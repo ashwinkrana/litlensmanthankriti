@@ -60,9 +60,24 @@ const DOT: Record<BuddyState, string> = {
  * affects page layout. The owl's colours are fixed hex values (light- and
  * dark-mode independent); only the surrounding panel uses app theme tokens.
  */
-export function MascotBuddy({ status }: { status: BuddyState }) {
-  const [open, setOpen] = useState(true)
+function isWide(): boolean {
+  return typeof window !== 'undefined' && (window.matchMedia?.('(min-width: 768px)').matches ?? true)
+}
+
+/**
+ * `docked`: start minimized (e.g. on the run and results pages, where the
+ * full card would cover the review text). The user can still open it.
+ */
+export function MascotBuddy({ status, docked = false }: { status: BuddyState; docked?: boolean }) {
+  const [open, setOpen] = useState(() => !docked && isWide())
   const [poke, setPoke] = useState<BuddyState | null>(null)
+
+  // Re-evaluate when the page changes; a manual open/close lasts until then.
+  const [prevDocked, setPrevDocked] = useState(docked)
+  if (docked !== prevDocked) {
+    setPrevDocked(docked)
+    setOpen(!docked && isWide())
+  }
 
   useEffect(() => {
     if (!poke) return
@@ -81,7 +96,13 @@ export function MascotBuddy({ status }: { status: BuddyState }) {
         }`}
       >
         <div className="shrink-0 transition-all duration-300" style={{ width: size, height: size }}>
-          <Mascot character={owl} state={shown} onPoke={() => setPoke('surprised')} />
+          {/* The library defaults to a fixed 160px box; make it fill (and shrink with) our box. */}
+          <Mascot
+            character={owl}
+            state={shown}
+            onPoke={() => setPoke('surprised')}
+            style={{ width: '100%', height: '100%' }}
+          />
         </div>
 
         {open ? (
