@@ -133,7 +133,7 @@ export default function App() {
           <>
             {runError && (
               <div className="mx-auto mt-4 w-full max-w-3xl px-5">
-                <p className="rounded-xl border-l-4 border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
+                <p className="rounded-xl border border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
                   {runError}
                 </p>
               </div>

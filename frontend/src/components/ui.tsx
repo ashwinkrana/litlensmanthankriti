@@ -155,7 +155,7 @@ export function SectionLabel({ children, className = '' }: { children: ReactNode
 
 export function PinnedNotice({ children }: { children: ReactNode }) {
   return (
-    <div className="border-l-4 border-rose-line bg-rose-soft px-4 py-3 text-sm text-txt">
+    <div className="rounded-xl border border-rose-line bg-rose-soft px-4 py-3 text-sm text-txt">
       {children}
     </div>
   )
