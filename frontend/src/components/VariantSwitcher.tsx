@@ -8,7 +8,7 @@ export function VariantSwitcher({ value, onChange }: { value: HomeVariant; onCha
       <div
         role="radiogroup"
         aria-label="Home page variant (temporary)"
-        className="flex items-center gap-1 rounded-full border border-edge bg-card p-1 shadow-book-lift"
+        className="flex max-w-[calc(100vw-2rem)] items-center gap-1 overflow-x-auto rounded-full border border-edge bg-card p-1 shadow-book-lift"
       >
         <span className="px-2 text-[11px] font-semibold text-faint">Variant</span>
         {HOME_VARIANTS.map((v) => {

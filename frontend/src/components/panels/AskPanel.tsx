@@ -131,10 +131,10 @@ export function AskPanel({ review }: { review: ReviewResult }) {
             type="button"
             onClick={() => submit()}
             disabled={loading || !question.trim()}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 transition enabled:hover:scale-105 enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cta text-cta-ink shadow-book transition enabled:hover:scale-105 enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Ask"
           >
-            {loading ? <Spinner className="h-4 w-4 border-slate-400 border-t-slate-950" /> : <ChatIcon className="h-4 w-4" />}
+            {loading ? <Spinner className="h-4 w-4 border-cta-ink/40 border-t-cta-ink" /> : <ChatIcon className="h-4 w-4" />}
           </button>
         </div>
 

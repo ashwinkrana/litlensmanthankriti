@@ -18,6 +18,8 @@ export type ComposerProps = {
   align?: 'center' | 'left'
   /** Small heading above the chips; null hides it. */
   chipsLabel?: string | null
+  /** Hide the built-in paper-count picker (a variant renders its own). */
+  hideDeck?: boolean
 }
 
 /**
@@ -32,6 +34,7 @@ export function TopicComposer({
   demoTopics,
   align = 'center',
   chipsLabel = 'Try a demo topic',
+  hideDeck = false,
 }: ComposerProps) {
   const [topic, setTopic] = useState('')
   const trimmed = topic.trim()
@@ -64,6 +67,7 @@ export function TopicComposer({
           className="w-full resize-none bg-transparent text-base font-medium text-ink outline-none placeholder:text-faint"
         />
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-edge2 pt-3">
+          {!hideDeck && (
           <div
             role="radiogroup"
             aria-label="Number of papers"
@@ -84,9 +88,10 @@ export function TopicComposer({
               </button>
             ))}
           </div>
+          )}
 
-          <InkButton onClick={submit} disabled={!canRun}>
-            {busy ? <Spinner className="h-4 w-4 border-slate-400 border-t-slate-950" /> : <span>Run review</span>}
+          <InkButton onClick={submit} disabled={!canRun} className="ml-auto">
+            {busy ? <Spinner className="h-4 w-4 border-cta-ink/40 border-t-cta-ink" /> : <span>Run review</span>}
             {!busy && <ArrowRightIcon className="h-4 w-4" />}
           </InkButton>
         </div>

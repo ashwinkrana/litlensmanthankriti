@@ -142,6 +142,7 @@ export default function App() {
           motion={motionOn}
           onMotionChange={setMotionOn}
           onHome={goHome}
+          showBadge={variant === 'threads'}
         />
 
         <div className="flex-1">

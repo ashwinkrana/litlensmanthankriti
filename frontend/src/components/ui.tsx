@@ -90,7 +90,7 @@ export function InkButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 py-2 text-sm font-bold text-slate-950 shadow-md shadow-amber-500/20 transition enabled:hover:brightness-110 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-xl bg-cta px-5 py-2 text-sm font-bold text-cta-ink shadow-book transition enabled:hover:brightness-110 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       {children}
     </button>

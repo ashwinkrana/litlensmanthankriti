@@ -2,79 +2,49 @@ import { lazy, Suspense } from 'react'
 import type { HomeVariant } from '../../lib/homeVariant'
 import type { Theme } from '../TopBar'
 
-// Each background is its own chunk, loaded only for the active variant.
-const DotGrid = lazy(() => import('./reactbits/DotGrid'))
-const Waves = lazy(() => import('./reactbits/Waves'))
+// Loaded as its own chunk so the WebGL code never delays the first paint.
 const Threads = lazy(() => import('./reactbits/Threads'))
 
-// Colours mirror the theme tokens in index.css.
-const INK = {
-  light: { faint: '#cbd5e1', line: '#bfdbfe', thread: '#94a3b8', accent: '#ca8a04' },
-  dark: { faint: '#2b3a52', line: '#24344d', thread: '#3b4a63', accent: '#fbbf24' },
-} as const
+type ThreadInk = { color: string; accent: string; opacity: number }
 
-function Scene({ variant, theme, paused }: { variant: HomeVariant; theme: Theme; paused: boolean }) {
-  const c = INK[theme]
-  switch (variant) {
-    case 'desk':
-      // The study-desk dot grid, now alive: dots swell amber near the cursor.
-      return (
-        <DotGrid
-          dotSize={2.6}
-          gap={18}
-          baseColor={c.faint}
-          activeColor={c.accent}
-          proximity={160}
-          swell={1}
-          glow={0.45}
-          shockStrength={3}
-          paused={paused}
-        />
-      )
-    case 'ruled':
-      // Ruled notebook paper; the lines bend where the pointer presses.
-      return (
-        <>
-          <Waves
-            lineColor={c.line}
-            accentColor={c.accent}
-            rotation={90}
-            spacing={30}
-            amplitude={7}
-            scale={0.55}
-            speed={0.35}
-            mouseRadius={150}
-            lightMode={theme === 'light'}
-            paused={paused}
-          />
-          {/* the notebook margin rule */}
-          <div className="absolute inset-y-0 left-[6vw] w-px bg-rose-line/60" />
-        </>
-      )
-    case 'threads':
-      // Threads of research drifting across the page.
-      return (
-        <Threads
-          color={c.thread}
-          accentColor={c.accent}
-          lineCount={70}
-          amplitude={1.3}
-          speed={0.35}
-          enableMouseInteraction
-          opacity={theme === 'light' ? 0.55 : 0.7}
-          paused={paused}
-        />
-      )
-  }
+// Thread colours per variant and theme, taken from each variant's palette.
+const INK: Record<HomeVariant, Record<Theme, ThreadInk>> = {
+  threads: {
+    light: { color: '#94a3b8', accent: '#ca8a04', opacity: 0.55 },
+    dark: { color: '#3b4a63', accent: '#fbbf24', opacity: 0.7 },
+  },
+  proceedings: {
+    light: { color: '#a3abd0', accent: '#2338c9', opacity: 0.5 },
+    dark: { color: '#2b3472', accent: '#7d8bff', opacity: 0.75 },
+  },
+  preprint: {
+    light: { color: '#b9bab4', accent: '#138a36', opacity: 0.45 },
+    dark: { color: '#3a3c40', accent: '#4cc46d', opacity: 0.65 },
+  },
+  cards: {
+    light: { color: '#a9ada3', accent: '#1d5fd1', opacity: 0.5 },
+    dark: { color: '#3a3d44', accent: '#5b95ff', opacity: 0.7 },
+  },
 }
 
-/** Fixed, non-interactive page background for the active home variant. */
+/** Fixed, non-interactive page background: threads of research drifting behind the app. */
 export function AppBackground({ variant, theme, animate }: { variant: HomeVariant; theme: Theme; animate: boolean }) {
+  const ink = INK[variant][theme]
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 bg-app">
       <Suspense fallback={null}>
         {/* key: remount on variant/theme so each scene starts clean with its colours */}
-        <Scene key={`${variant}-${theme}`} variant={variant} theme={theme} paused={!animate} />
+        <Threads
+          key={`${variant}-${theme}`}
+          color={ink.color}
+          accentColor={ink.accent}
+          lineCount={70}
+          amplitude={1.3}
+          speed={0.35}
+          enableMouseInteraction
+          opacity={ink.opacity}
+          paused={!animate}
+        />
       </Suspense>
     </div>
   )

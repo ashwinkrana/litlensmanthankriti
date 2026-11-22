@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import type { StageEvent } from '../../api/types'
 import eventsMock from '../../mocks/events.json'
 import { AgentTimeline } from '../AgentTimeline'
@@ -11,7 +11,7 @@ const HOLD_MS = 3200 // pause on the finished run before replaying
  * The real AgentTimeline, replaying the recorded mock run (src/mocks/events.json)
  * on a loop. With animations off it shows the finished run, still.
  */
-export function SampleRun({ animate }: { animate: boolean }) {
+export function SampleRun({ animate, caption }: { animate: boolean; caption?: ReactNode }) {
   const [count, setCount] = useState(animate ? 1 : RECORDED.length)
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export function SampleRun({ animate }: { animate: boolean }) {
       <div className="rounded-xl border border-edge bg-card p-4 shadow-book-lift">
         <AgentTimeline compact events={RECORDED.slice(0, shown)} />
       </div>
-      <figcaption className="mt-2 text-xs text-faint">A recorded run, replayed. Yours runs live.</figcaption>
+      <figcaption className="mt-2 text-xs text-mut">{caption ?? 'A recorded run, replayed. Yours runs live.'}</figcaption>
     </figure>
   )
 }
