@@ -1,6 +1,22 @@
-import { BookIcon, MoonIcon, SunIcon } from './icons'
+import { BookIcon, MoonIcon, MotionIcon, MotionOffIcon, SunIcon } from './icons'
 
 export type Theme = 'light' | 'dark'
+
+export function MotionToggle({ on, onChange }: { on: boolean; onChange: (on: boolean) => void }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!on)}
+      aria-pressed={on}
+      aria-label={on ? 'Turn animations off' : 'Turn animations on'}
+      title={on ? 'Animations on' : 'Animations off'}
+      className="inline-flex h-9 items-center gap-2 rounded-full border border-edge bg-card px-3 text-mut transition hover:border-amb-line hover:text-amb"
+    >
+      {on ? <MotionIcon className="h-4 w-4 text-amb-dot" /> : <MotionOffIcon className="h-4 w-4" />}
+      <span className="hidden text-xs font-semibold sm:inline">{on ? 'Motion on' : 'Motion off'}</span>
+    </button>
+  )
+}
 
 export function ThemeToggle({
   theme,
@@ -26,10 +42,14 @@ export function ThemeToggle({
 export function TopBar({
   theme,
   onThemeChange,
+  motion,
+  onMotionChange,
   onHome,
 }: {
   theme: Theme
   onThemeChange: (t: Theme) => void
+  motion: boolean
+  onMotionChange: (on: boolean) => void
   onHome: () => void
 }) {
   return (
@@ -45,7 +65,10 @@ export function TopBar({
           </span>
         </button>
 
-        <ThemeToggle theme={theme} onChange={onThemeChange} />
+        <div className="flex items-center gap-2">
+          <MotionToggle on={motion} onChange={onMotionChange} />
+          <ThemeToggle theme={theme} onChange={onThemeChange} />
+        </div>
       </div>
     </header>
   )

@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { createReview, getDemoTopics, getReview } from './api/client'
+import { useMotionPref } from './lib/motionPref'
 import { subscribeToJob } from './api/sse'
 import type { ReviewResult, StageEvent } from './api/types'
 import { TopBar, type Theme } from './components/TopBar'
@@ -7,6 +9,9 @@ import { MascotBuddy, type BuddyState } from './components/MascotBuddy'
 import { HomePage } from './pages/HomePage'
 import { ResultsPage } from './pages/ResultsPage'
 import { RunPage } from './pages/RunPage'
+
+// Loaded on demand so the particle engine never delays the first paint.
+const BackgroundNetwork = lazy(() => import('./components/BackgroundNetwork'))
 
 type Phase = 'home' | 'running' | 'results'
 
@@ -36,6 +41,7 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [runError, setRunError] = useState<string | null>(null)
   const [celebrate, setCelebrate] = useState(false)
+  const [motionOn, setMotionOn] = useMotionPref()
 
   const closeStream = useRef<(() => void) | null>(null)
 
@@ -125,33 +131,57 @@ export default function App() {
   )
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <TopBar theme={theme} onThemeChange={setTheme} onHome={goHome} />
+    <MotionConfig reducedMotion={motionOn ? 'never' : 'always'}>
+      {motionOn && (
+        <Suspense fallback={null}>
+          <BackgroundNetwork theme={theme} />
+        </Suspense>
+      )}
 
-      <div className="flex-1">
-        {phase === 'home' && (
-          <>
-            {runError && (
-              <div className="mx-auto mt-4 w-full max-w-3xl px-5">
-                <p className="rounded-xl border border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
-                  {runError}
-                </p>
-              </div>
-            )}
-            <HomePage demoTopics={demoTopics} onStart={start} busy={busy} />
-          </>
-        )}
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <TopBar
+          theme={theme}
+          onThemeChange={setTheme}
+          motion={motionOn}
+          onMotionChange={setMotionOn}
+          onHome={goHome}
+        />
 
-        {phase === 'running' && <RunPage topic={topic} events={events} />}
+        <div className="flex-1">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={phase}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {phase === 'home' && (
+                <>
+                  {runError && (
+                    <div className="mx-auto mt-4 w-full max-w-3xl px-5">
+                      <p className="rounded-xl border border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
+                        {runError}
+                      </p>
+                    </div>
+                  )}
+                  <HomePage demoTopics={demoTopics} onStart={start} busy={busy} />
+                </>
+              )}
 
-        {phase === 'results' && review && <ResultsPage review={review} />}
+              {phase === 'running' && <RunPage topic={topic} events={events} />}
+
+              {phase === 'results' && review && <ResultsPage review={review} />}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <footer className="border-t border-edge2 px-5 py-4 text-center text-xs text-faint">
+          {FOOTER} · job {jobId ? jobId.slice(0, 8) : '—'}
+        </footer>
+
+        <MascotBuddy status={buddyStatus} docked={phase !== 'home'} animate={motionOn} />
       </div>
-
-      <footer className="border-t border-edge2 px-5 py-4 text-center text-xs text-faint">
-        {FOOTER} · job {jobId ? jobId.slice(0, 8) : '—'}
-      </footer>
-
-      <MascotBuddy status={buddyStatus} docked={phase !== 'home'} />
-    </div>
+    </MotionConfig>
   )
 }

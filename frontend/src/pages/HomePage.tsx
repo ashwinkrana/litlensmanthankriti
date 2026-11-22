@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ArrowRightIcon, SparkleIcon } from '../components/icons'
+import { PipelineStrip } from '../components/PipelineStrip'
 import { InkButton, Spinner } from '../components/ui'
 
 const DECKS = [
@@ -30,7 +31,8 @@ export function HomePage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-5 py-10 text-center">
+    <main className="mx-auto w-full max-w-5xl px-5 py-10 text-center">
+      <div className="mx-auto max-w-3xl">
       <div className="space-y-2">
         <h1 className="text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
           What would you like to explore today?
@@ -90,6 +92,9 @@ export function HomePage({
           ))}
         </div>
       </div>
+      </div>
+
+      <PipelineStrip deck={deck} />
     </main>
   )
 }

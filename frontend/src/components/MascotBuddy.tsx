@@ -60,15 +60,26 @@ const DOT: Record<BuddyState, string> = {
  * affects page layout. The owl's colours are fixed hex values (light- and
  * dark-mode independent); only the surrounding panel uses app theme tokens.
  */
+// Open by default only on screens with room beside the content; at common
+// projector sizes (1024–1440px) the open card would cover the page.
 function isWide(): boolean {
-  return typeof window !== 'undefined' && (window.matchMedia?.('(min-width: 768px)').matches ?? true)
+  return typeof window !== 'undefined' && (window.matchMedia?.('(min-width: 1536px)').matches ?? true)
 }
 
 /**
  * `docked`: start minimized (e.g. on the run and results pages, where the
  * full card would cover the review text). The user can still open it.
  */
-export function MascotBuddy({ status, docked = false }: { status: BuddyState; docked?: boolean }) {
+export function MascotBuddy({
+  status,
+  docked = false,
+  animate = true,
+}: {
+  status: BuddyState
+  docked?: boolean
+  /** false: hold the owl still (the top-bar "Motion off" setting). */
+  animate?: boolean
+}) {
   const [open, setOpen] = useState(() => !docked && isWide())
   const [poke, setPoke] = useState<BuddyState | null>(null)
 
@@ -98,6 +109,10 @@ export function MascotBuddy({ status, docked = false }: { status: BuddyState; do
         <div className="shrink-0 transition-all duration-300" style={{ width: size, height: size }}>
           {/* The library defaults to a fixed 160px box; make it fill (and shrink with) our box. */}
           <Mascot
+            key={animate ? 'live' : 'still'}
+            speed={animate ? 1 : 0}
+            effects={animate}
+            respectReducedMotion={false}
             character={owl}
             state={shown}
             onPoke={() => setPoke('surprised')}
