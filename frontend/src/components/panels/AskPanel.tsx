@@ -6,6 +6,7 @@ import type { QASource, ReviewResult } from '../../api/types'
 import { BotIcon, ChatIcon, LinkIcon } from '../icons'
 import { IndexCard, SectionLabel, Spinner } from '../ui'
 import { useHoot } from '../../lib/hootContext'
+import { HootAvatar } from '../hoot/HootAvatar'
 
 type Message = {
   id: number
@@ -169,9 +170,15 @@ export function AskPanel({ review }: { review: ReviewResult }) {
           {messages.map((m) => (
             <div key={m.id} className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
-                <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide ${m.role === 'user' ? 'bg-card2 text-txt' : m.role === 'error' ? 'bg-rose-soft text-rose' : 'bg-amb-soft text-amb'}`}>
-                  {m.role === 'user' ? 'You' : m.role === 'error' ? 'Error' : 'LitLens'}
-                </span>
+                {m.role === 'user' ? (
+                  <span className="rounded-full bg-card2 px-2 py-0.5 text-xs font-semibold text-txt">You</span>
+                ) : (
+                  <>
+                    {/* answers come from Hoot: a still of him speaking, or sad on an error */}
+                    <HootAvatar mood={m.role === 'error' ? 'sad' : 'speaking'} size={30} />
+                    <span className={`text-xs font-semibold ${m.role === 'error' ? 'text-rose' : 'text-ink'}`}>Hoot</span>
+                  </>
+                )}
               </div>
               {m.role !== 'error' && (
                 <div className="rounded-xl border border-edge bg-card2 p-3 text-sm leading-relaxed text-txt">

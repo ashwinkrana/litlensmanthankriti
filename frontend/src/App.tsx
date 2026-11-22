@@ -8,7 +8,7 @@ import { useMediaQuery } from './lib/useMediaQuery'
 import { subscribeToJob } from './api/sse'
 import type { ReviewResult, StageEvent } from './api/types'
 import { TopBar, type Theme } from './components/TopBar'
-import { MascotBuddy } from './components/MascotBuddy'
+import { HootAvatar } from './components/hoot/HootAvatar'
 import { AppBackground } from './components/backgrounds/AppBackground'
 import { HomePage } from './pages/HomePage'
 import { ResultsPage } from './pages/ResultsPage'
@@ -85,8 +85,6 @@ export default function App() {
   }, [])
 
   const wide = useMediaQuery('(min-width: 1024px)')
-  // On the home page Hoot lives in the page itself (perched, or inline on phones).
-  const hootInPage = phase === 'home'
 
   // What Hoot is doing, from the app's real state.
   const hootBase: HootLine = runError
@@ -167,8 +165,9 @@ export default function App() {
                 <>
                   {runError && (
                     <div className="mx-auto mt-4 w-full max-w-3xl px-5">
-                      <p className="rounded-xl border border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
-                        {runError}
+                      <p className="flex items-center gap-3 rounded-xl border border-rose-line bg-rose-soft px-4 py-3 text-sm text-rose">
+                        <HootAvatar mood="sad" size={36} />
+                        <span>{runError}</span>
                       </p>
                     </div>
                   )}
@@ -183,9 +182,13 @@ export default function App() {
                 </>
               )}
 
-              {phase === 'running' && <RunPage topic={topic} events={events} />}
+              {phase === 'running' && (
+                <RunPage topic={topic} events={events} theme={theme} animate={motionOn} wide={wide} />
+              )}
 
-              {phase === 'results' && review && <ResultsPage review={review} />}
+              {phase === 'results' && review && (
+                <ResultsPage review={review} theme={theme} animate={motionOn} wide={wide} />
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -194,7 +197,6 @@ export default function App() {
           {FOOTER} · job {jobId ? jobId.slice(0, 8) : '—'}
         </footer>
 
-        <MascotBuddy theme={theme} docked={phase !== 'home'} hidden={hootInPage} animate={motionOn} />
       </div>
       </HootProvider>
     </MotionConfig>

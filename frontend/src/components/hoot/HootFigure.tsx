@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Mascot } from 'wobnimo/react'
 import owl from '../../../mascots/owl'
 import type { HootMood } from '../../lib/hootContext'
@@ -26,6 +26,7 @@ export function HootFigure({
   floor = 1,
   onBand = false,
   className = '',
+  style,
 }: {
   mood: HootMood
   theme: Theme
@@ -35,10 +36,11 @@ export function HootFigure({
   /** Standing in front of the ultramarine band: use the navy cap. */
   onBand?: boolean
   className?: string
+  style?: CSSProperties
 }) {
   const [ready, setReady] = useState(false)
   return (
-    <div className={`transition-opacity duration-500 ease-out ${ready ? 'opacity-100' : 'opacity-0'} ${className}`}>
+    <div className={`transition-opacity duration-500 ease-out ${ready ? 'opacity-100' : 'opacity-0'} ${className}`} style={style}>
       <Mascot
         // remount when motion is toggled so speed/effects apply from a clean start
         key={animate ? 'live' : 'still'}
