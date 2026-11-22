@@ -48,7 +48,8 @@ function StatusIcon({ state }: { state: 'pending' | 'active' | 'done' | 'error' 
   return <DotsIcon className="h-4 w-4 text-faint" />
 }
 
-export function AgentTimeline({ events }: { events: StageEvent[] }) {
+/** `compact`: tighter rows with just the label and latest message (home-page preview). */
+export function AgentTimeline({ events, compact = false }: { events: StageEvent[]; compact?: boolean }) {
   const finished = stateFor(events, 'done') === 'done'
   const failed = stateFor(events, 'error') === 'error'
 
@@ -63,7 +64,7 @@ export function AgentTimeline({ events }: { events: StageEvent[] }) {
         </Chip>
       </div>
 
-      <ol className="mt-4 space-y-2">
+      <ol className={compact ? 'mt-3 space-y-1.5' : 'mt-4 space-y-2'}>
         {STAGES.map((stage, i) => {
           const state = stateFor(events, stage.key)
           const last = lastEvent(events, stage.key)
@@ -89,21 +90,23 @@ export function AgentTimeline({ events }: { events: StageEvent[] }) {
                 {i < STAGES.length - 1 && <span className="my-1 w-px flex-1 bg-edge" />}
               </div>
 
-              <div className={`flex-1 rounded-xl border p-3 ${state === 'active' ? 'index-card--lift border-amb-line' : 'border-edge bg-card'}`}>
+              <div
+                className={`flex-1 rounded-xl border ${compact ? 'px-3 py-1.5' : 'p-3'} ${state === 'active' ? 'index-card--lift border-amb-line' : 'border-edge bg-card'}`}
+              >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-ink">{stage.label}</span>
                     <StatusIcon state={state} />
                   </div>
-                  <div className="flex items-center gap-3 font-mono text-[11px] text-mut">
-                    {last?.message && <span className="text-mut">{last.message}</span>}
-                    {duration > 0 && <span>{formatMs(duration)}</span>}
-                    {provider && <Chip tone="sky">{provider}</Chip>}
-                    {tokens > 0 && <span>{tokens.toLocaleString()} tok</span>}
+                  <div className="flex min-w-0 items-center gap-3 font-mono text-[11px] text-mut">
+                    {last?.message && <span className="truncate text-mut">{last.message}</span>}
+                    {!compact && duration > 0 && <span>{formatMs(duration)}</span>}
+                    {!compact && provider && <Chip tone="sky">{provider}</Chip>}
+                    {!compact && tokens > 0 && <span>{tokens.toLocaleString()} tok</span>}
                   </div>
                 </div>
-                {last?.progress && <ProgressBar current={last.progress.current} total={last.progress.total} />}
-                <p className="mt-1 text-xs text-faint">{stage.hint}</p>
+                {!compact && last?.progress && <ProgressBar current={last.progress.current} total={last.progress.total} />}
+                {!compact && <p className="mt-1 text-xs text-faint">{stage.hint}</p>}
               </div>
             </li>
           )
@@ -112,12 +115,12 @@ export function AgentTimeline({ events }: { events: StageEvent[] }) {
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-amb-line bg-amb-soft text-amb">
             <SparkleIcon className="h-4 w-4" />
           </span>
-          <div className="flex-1 rounded-xl border border-edge bg-card p-3">
+          <div className={`flex-1 rounded-xl border border-edge bg-card ${compact ? 'px-3 py-1.5' : 'p-3'}`}>
             <div className="flex items-center justify-between">
               <span className="text-sm font-bold text-ink">Review ready</span>
               {!finished && <Spinner className="h-3.5 w-3.5" />}
             </div>
-            <p className="mt-1 text-xs text-faint">Markdown + verified citations + Q&A corpus</p>
+            {!compact && <p className="mt-1 text-xs text-faint">Markdown + verified citations + Q&A corpus</p>}
           </div>
         </li>
       </ol>
