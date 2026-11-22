@@ -1,47 +1,51 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------ */
-/* LitLens — Academic Research Companion · LIGHT + DARK themes          */
+/* LitLens "Proceedings": the app as a bound conference-proceedings    */
+/* volume. Cover-stock ground, one committed ultramarine series colour,*/
+/* navy-ink grotesk (Schibsted Grotesk) with Geist Mono for metadata.  */
 /*                                                                     */
 /* Rule: the `@theme` block defines the LIGHT values (the default).    */
-/* The `.dark` class overrides EVERY token with DARK values. App.tsx   */
+/* The `.dark` class overrides every token with DARK values. App.tsx   */
 /* adds/removes `.dark` on <html> when the user toggles the theme.     */
+/* The token names amb-* are historical: they hold the accent colour.  */
 /* ------------------------------------------------------------------ */
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Fira Code', monospace;
+  --font-sans: 'Schibsted Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Schibsted Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'Cascadia Mono', monospace;
   --font-hand: 'Caveat', cursive;
 
   /* ---- Primary action (filled button) ---- */
-  --color-cta: #fbbf24;
-  --color-cta-ink: #0b0f17;
-  /* ---- Full-bleed hero band (used by the Proceedings variant) ---- */
-  --color-band: #fbbf24;
-  --color-band-ink: #0b0f17;
+  --color-cta: #2338c9;
+  --color-cta-ink: #ffffff;
+  /* ---- Full-bleed series band (home hero) ---- */
+  --color-band: #2338c9;
+  --color-band-ink: #ffffff;
 
   /* ---- Surfaces (LIGHT) ---- */
-  --color-app: #fff8f5;        /* page canvas */
-  --color-dot: #e2e8f0;        /* grid dots */
-  --color-card: #ffffff;        /* card surface */
-  --color-card2: #fcf2eb;       /* elevated / hover */
-  --color-field: #ffffff;       /* text inputs */
-  --color-edge: #0f172a;        /* strong borders */
-  --color-edge2: #cbd5e1;       /* dividers */
+  --color-app: #f4f5f2; /* cover stock */
+  --color-dot: #dfe2ea;
+  --color-card: #ffffff;
+  --color-card2: #eceef4; /* elevated / hover */
+  --color-field: #ffffff; /* text inputs */
+  --color-edge: #c9cedc; /* borders */
+  --color-edge2: #e1e4ec; /* dividers */
 
   /* ---- Ink (LIGHT) ---- */
-  --color-ink: #0f172a;         /* headings / strongest */
-  --color-txt: #334155;         /* body */
-  --color-mut: #64748b;         /* secondary */
-  --color-faint: #94a3b8;       /* tertiary */
+  --color-ink: #0c1240; /* headings / strongest */
+  --color-txt: #2a3158; /* body */
+  --color-mut: #565d7d; /* secondary */
+  --color-faint: #7d84a0; /* tertiary */
 
-  /* ---- Accents (LIGHT) ---- */
-  --color-amb-soft: #fef08a;
-  --color-amb-line: #fde047;
-  --color-amb: #0f172a;
-  --color-amb-dot: #ca8a04;
+  /* ---- Accent: ultramarine (LIGHT) ---- */
+  --color-amb-soft: #e3e7ff;
+  --color-amb-line: #b3bcf5;
+  --color-amb: #1a2aa6;
+  --color-amb-dot: #2338c9;
 
+  /* ---- Status colours (unchanged semantics) ---- */
   --color-mint-soft: #86efac;
   --color-mint-line: #4ade80;
   --color-mint: #166534;
@@ -62,33 +66,38 @@
   --color-purp: #6d28d9;
   --color-purp-dot: #9333ea;
 
-  /* ---- Shadows (LIGHT) ---- */
-  --shadow-book: 2px 3px 0 0 rgba(15, 23, 42, 0.08);
-  --shadow-book-lift: 4px 6px 0 0 rgba(15, 23, 42, 0.14);
-  --shadow-book-overlay: 6px 10px 0 0 rgba(15, 23, 42, 0.2);
+  /* ---- Shadows (LIGHT): soft and tinted, never hard offsets ---- */
+  --shadow-book: 0 1px 2px rgba(12, 18, 64, 0.06), 0 4px 12px rgba(12, 18, 64, 0.05);
+  --shadow-book-lift: 0 12px 32px -12px rgba(12, 18, 64, 0.28);
+  --shadow-book-overlay: 0 20px 44px -14px rgba(12, 18, 64, 0.34);
 }
 
 .dark {
-  /* ---- Surfaces (DARK) ---- */
-  --color-app: #0b0f17;
-  --color-dot: #1c2738;
-  --color-card: #131b26;
-  --color-card2: #1c2738;
-  --color-field: #0e1520;
-  --color-edge: #233144;
-  --color-edge2: #1e2a3c;
+  --color-cta: #7d8bff;
+  --color-cta-ink: #0a0e24;
+  --color-band: #18206a;
+  --color-band-ink: #eef0ff;
+
+  /* ---- Surfaces (DARK): the navy volume ---- */
+  --color-app: #0a0e24;
+  --color-dot: #1a2142;
+  --color-card: #11173a;
+  --color-card2: #182050;
+  --color-field: #0d1230;
+  --color-edge: #2a336e;
+  --color-edge2: #1b2350;
 
   /* ---- Ink (DARK) ---- */
-  --color-ink: #f8fafc;
-  --color-txt: #cbd5e1;
-  --color-mut: #94a3b8;
-  --color-faint: #64748b;
+  --color-ink: #eef0ff;
+  --color-txt: #c8ccec;
+  --color-mut: #9198c4;
+  --color-faint: #6f76a6;
 
-  /* ---- Accents (DARK) ---- */
-  --color-amb-soft: rgba(251, 191, 36, 0.15);
-  --color-amb-line: rgba(251, 191, 36, 0.3);
-  --color-amb: #fcd34d;
-  --color-amb-dot: #fbbf24;
+  /* ---- Accent (DARK) ---- */
+  --color-amb-soft: rgba(125, 139, 255, 0.16);
+  --color-amb-line: rgba(125, 139, 255, 0.4);
+  --color-amb: #b4bcff;
+  --color-amb-dot: #7d8bff;
 
   --color-mint-soft: rgba(52, 211, 153, 0.15);
   --color-mint-line: rgba(52, 211, 153, 0.4);
@@ -112,19 +121,19 @@
 
   /* ---- Shadows (DARK) ---- */
   --shadow-book: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-book-lift: 0 12px 32px rgba(0, 0, 0, 0.55);
-  --shadow-book-overlay: 0 20px 48px rgba(0, 0, 0, 0.6);
+  --shadow-book-lift: 0 14px 34px rgba(0, 0, 0, 0.5);
+  --shadow-book-overlay: 0 22px 48px rgba(0, 0, 0, 0.6);
 }
 
 :root {
   color-scheme: light;
-  --glow-amb: 0 0 0 1px rgba(251, 191, 36, 0.55), 0 0 14px rgba(251, 191, 36, 0.25);
-  --focus-ring: 0 0 0 2px #fde047;
+  --glow-amb: 0 0 0 1px rgba(35, 56, 201, 0.5);
+  --focus-ring: 0 0 0 3px rgba(35, 56, 201, 0.28);
 }
 .dark {
   color-scheme: dark;
-  --glow-amb: 0 0 14px rgba(251, 191, 36, 0.25);
-  --focus-ring: 0 0 0 1px rgba(251, 191, 36, 0.7), 0 0 18px rgba(251, 191, 36, 0.18);
+  --glow-amb: 0 0 0 1px rgba(125, 139, 255, 0.55);
+  --focus-ring: 0 0 0 3px rgba(125, 139, 255, 0.35);
 }
 
 html,
@@ -254,193 +263,4 @@ html[data-motion='off'] *::after {
 }
 .animate-ping-soft {
   animation: ping-soft 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-/* ================================================================== */
-/* TEMPORARY home-page variants (see src/lib/homeVariant.ts).          */
-/* Each block re-themes the whole app: palette, CTA, focus and fonts.   */
-/* `html[data-variant=x]` beats `.dark`, so every variant sets both.    */
-/* ================================================================== */
-
-/* ---- Proceedings: a bound conference-proceedings volume ------------ */
-html[data-variant='proceedings'] {
-  --font-sans: 'Schibsted Grotesk Variable', system-ui, sans-serif;
-  --font-display: 'Schibsted Grotesk Variable', system-ui, sans-serif;
-  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
-  --color-app: #f4f5f2;
-  --color-dot: #dfe2ea;
-  --color-card: #ffffff;
-  --color-card2: #eceef4;
-  --color-field: #ffffff;
-  --color-edge: #c9cedc;
-  --color-edge2: #e1e4ec;
-  --color-ink: #0c1240;
-  --color-txt: #2a3158;
-  --color-mut: #565d7d;
-  --color-faint: #7d84a0;
-  --color-amb-soft: #e3e7ff;
-  --color-amb-line: #b3bcf5;
-  --color-amb: #1a2aa6;
-  --color-amb-dot: #2338c9;
-  --color-cta: #2338c9;
-  --color-cta-ink: #ffffff;
-  --color-band: #2338c9;
-  --color-band-ink: #ffffff;
-  --shadow-book: 0 1px 2px rgba(12, 18, 64, 0.06), 0 4px 12px rgba(12, 18, 64, 0.05);
-  --shadow-book-lift: 0 12px 32px -12px rgba(12, 18, 64, 0.28);
-  --shadow-book-overlay: 0 20px 44px -14px rgba(12, 18, 64, 0.34);
-  --focus-ring: 0 0 0 3px rgba(35, 56, 201, 0.28);
-  --glow-amb: 0 0 0 1px rgba(35, 56, 201, 0.5);
-}
-html[data-variant='proceedings'].dark {
-  --color-app: #0a0e24;
-  --color-dot: #1a2142;
-  --color-card: #11173a;
-  --color-card2: #182050;
-  --color-field: #0d1230;
-  --color-edge: #2a336e;
-  --color-edge2: #1b2350;
-  --color-ink: #eef0ff;
-  --color-txt: #c8ccec;
-  --color-mut: #9198c4;
-  --color-faint: #6f76a6;
-  --color-amb-soft: rgba(125, 139, 255, 0.16);
-  --color-amb-line: rgba(125, 139, 255, 0.4);
-  --color-amb: #b4bcff;
-  --color-amb-dot: #7d8bff;
-  --color-cta: #7d8bff;
-  --color-cta-ink: #0a0e24;
-  --color-band: #18206a;
-  --color-band-ink: #eef0ff;
-  --shadow-book: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-book-lift: 0 14px 34px rgba(0, 0, 0, 0.5);
-  --shadow-book-overlay: 0 22px 48px rgba(0, 0, 0, 0.6);
-  --focus-ring: 0 0 0 3px rgba(125, 139, 255, 0.35);
-  --glow-amb: 0 0 0 1px rgba(125, 139, 255, 0.55);
-}
-
-/* ---- Preprint: the first page of a LaTeX preprint ------------------ */
-html[data-variant='preprint'] {
-  --font-sans: 'STIX Two Text Variable', 'Times New Roman', serif;
-  --font-display: 'STIX Two Text Variable', 'Times New Roman', serif;
-  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
-  --color-app: #fcfcfb;
-  --color-dot: #ebebe8;
-  --color-card: #ffffff;
-  --color-card2: #f4f4f2;
-  --color-field: #ffffff;
-  --color-edge: #d4d4cf;
-  --color-edge2: #e6e6e2;
-  --color-ink: #111214;
-  --color-txt: #2b2d31;
-  --color-mut: #575a61;
-  --color-faint: #80838a;
-  /* hyperref's citation green */
-  --color-amb-soft: #e6f4ea;
-  --color-amb-line: #8fd1a2;
-  --color-amb: #0e6b2a;
-  --color-amb-dot: #138a36;
-  --color-cta: #138a36;
-  --color-cta-ink: #ffffff;
-  --shadow-book: 0 1px 2px rgba(17, 18, 20, 0.06);
-  --shadow-book-lift: 0 10px 28px -12px rgba(17, 18, 20, 0.22);
-  --shadow-book-overlay: 0 18px 40px -14px rgba(17, 18, 20, 0.28);
-  --focus-ring: 0 0 0 3px rgba(19, 138, 54, 0.25);
-  --glow-amb: 0 0 0 1px rgba(19, 138, 54, 0.5);
-}
-html[data-variant='preprint'].dark {
-  --color-app: #151618;
-  --color-dot: #222326;
-  --color-card: #1c1d20;
-  --color-card2: #232428;
-  --color-field: #18191b;
-  --color-edge: #34363b;
-  --color-edge2: #27292d;
-  --color-ink: #ececea;
-  --color-txt: #d0d0cd;
-  --color-mut: #a2a39f;
-  --color-faint: #74756f;
-  --color-amb-soft: rgba(76, 196, 109, 0.14);
-  --color-amb-line: rgba(76, 196, 109, 0.42);
-  --color-amb: #84dd9b;
-  --color-amb-dot: #4cc46d;
-  --color-cta: #4cc46d;
-  --color-cta-ink: #0d0e0f;
-  --shadow-book: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-book-lift: 0 14px 34px rgba(0, 0, 0, 0.5);
-  --shadow-book-overlay: 0 22px 48px rgba(0, 0, 0, 0.6);
-  --focus-ring: 0 0 0 3px rgba(76, 196, 109, 0.32);
-  --glow-amb: 0 0 0 1px rgba(76, 196, 109, 0.55);
-}
-
-/* ---- Cards: every paper a collectible card ------------------------- */
-html[data-variant='cards'] {
-  --font-sans: 'Geist Variable', system-ui, sans-serif;
-  --font-display: 'Zilla Slab', Rockwell, serif;
-  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
-  --color-app: #e7e8e3;
-  --color-dot: #d3d5cf;
-  --color-card: #fbfbf9;
-  --color-card2: #f0f1ec;
-  --color-field: #ffffff;
-  --color-edge: #c1c4bb;
-  --color-edge2: #d8dad3;
-  --color-ink: #16181a;
-  --color-txt: #2e3135;
-  --color-mut: #565a61;
-  --color-faint: #7e8288;
-  --color-amb-soft: #e2ecfd;
-  --color-amb-line: #a9c4f4;
-  --color-amb: #164aa6;
-  --color-amb-dot: #1d5fd1;
-  --color-cta: #1d5fd1;
-  --color-cta-ink: #ffffff;
-  --shadow-book: 0 1px 2px rgba(22, 24, 26, 0.08), 0 3px 10px rgba(22, 24, 26, 0.06);
-  --shadow-book-lift: 0 14px 30px -12px rgba(22, 24, 26, 0.3);
-  --shadow-book-overlay: 0 22px 44px -14px rgba(22, 24, 26, 0.36);
-  --focus-ring: 0 0 0 3px rgba(29, 95, 209, 0.28);
-  --glow-amb: 0 0 0 1px rgba(29, 95, 209, 0.5);
-}
-html[data-variant='cards'].dark {
-  --color-app: #121316;
-  --color-dot: #1f2125;
-  --color-card: #1b1d21;
-  --color-card2: #24272c;
-  --color-field: #16181b;
-  --color-edge: #34373d;
-  --color-edge2: #272a30;
-  --color-ink: #f1f2ef;
-  --color-txt: #cfd1cc;
-  --color-mut: #9fa29c;
-  --color-faint: #73766f;
-  --color-amb-soft: rgba(91, 149, 255, 0.15);
-  --color-amb-line: rgba(91, 149, 255, 0.42);
-  --color-amb: #9bbdff;
-  --color-amb-dot: #5b95ff;
-  --color-cta: #5b95ff;
-  --color-cta-ink: #0b0c0e;
-  --shadow-book: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-book-lift: 0 14px 34px rgba(0, 0, 0, 0.5);
-  --shadow-book-overlay: 0 22px 48px rgba(0, 0, 0, 0.6);
-  --focus-ring: 0 0 0 3px rgba(91, 149, 255, 0.34);
-  --glow-amb: 0 0 0 1px rgba(91, 149, 255, 0.55);
-}
-
-/* Trading-card flip (Cards variant) */
-.card-flip {
-  perspective: 1200px;
-}
-.card-flip__inner {
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.card-flip[data-flipped='true'] .card-flip__inner {
-  transform: rotateY(180deg);
-}
-.card-flip__face {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.card-flip__back {
-  transform: rotateY(180deg);
 }

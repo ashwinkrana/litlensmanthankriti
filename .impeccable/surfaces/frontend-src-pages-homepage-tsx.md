@@ -5,7 +5,7 @@ primary_target: "frontend/src/pages/HomePage.tsx"
 related_targets: ["frontend/src/pages/home/HomeProceedings.tsx","frontend/src/pages/home/HomePreprint.tsx","frontend/src/pages/home/HomeCards.tsx"]
 ---
 
-Scope: LitLens home page (entry surface). Mode: Persuade (visitor types a topic and starts a review). Pinned by the user: Threads background, split hero with the live pipeline, LitLens name, Hoot the owl. Palette and type open. Three directions are built side by side behind a temporary switcher; the user picks one.
+Scope: LitLens home page (entry surface). Mode: Persuade (visitor types a topic and starts a review). Pinned by the user: Threads background, split hero with the live pipeline, LitLens name, Hoot the owl. Palette and type open. Three directions were built side by side; the user chose Proceedings on 2026-11-22 and the others were deleted.
 
 Audience: faculty evaluators at a live projector demo and students writing literature reviews, equally. Belief to earn: the citations are real.
 
@@ -20,4 +20,4 @@ Raises from declined challengers: Riley moire (threads densest inside the band, 
 Alternates built for comparison: Preprint (impeccable's pick, position 1; risk: familiar academic look) and Cards (challenger pop-culture-shelf-wax-pack-card, verdict competitive on product clarity).
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-Unresolved: which variant ships; once chosen, run the finish review and write DESIGN.md for that world, then delete the others.
+Unresolved: finish review and DESIGN.md for the Proceedings world are still owed.

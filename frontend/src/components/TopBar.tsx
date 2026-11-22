@@ -45,15 +45,12 @@ export function TopBar({
   motion,
   onMotionChange,
   onHome,
-  showBadge = true,
 }: {
   theme: Theme
   onThemeChange: (t: Theme) => void
   motion: boolean
   onMotionChange: (on: boolean) => void
   onHome: () => void
-  /** The "study desk" badge belongs to the original Threads look only. */
-  showBadge?: boolean
 }) {
   return (
     <header className="sticky top-0 z-30 border-b border-edge2 bg-app/85 px-5 py-3 backdrop-blur md:px-8">
@@ -63,11 +60,6 @@ export function TopBar({
             <BookIcon className="h-4 w-4 text-amb-dot" />
             <span className="text-sm">LitLens</span>
           </span>
-          {showBadge && (
-            <span className="hidden rounded-full border border-amb-line bg-amb-soft px-2.5 py-0.5 font-hand text-[15px] font-semibold text-amb sm:inline">
-              study desk #04
-            </span>
-          )}
         </button>
 
         <div className="flex items-center gap-2">

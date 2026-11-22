@@ -7,8 +7,6 @@ import type { ReviewResult, StageEvent } from './api/types'
 import { TopBar, type Theme } from './components/TopBar'
 import { MascotBuddy, type BuddyState } from './components/MascotBuddy'
 import { AppBackground } from './components/backgrounds/AppBackground'
-import { VariantSwitcher } from './components/VariantSwitcher'
-import { useHomeVariant } from './lib/homeVariant'
 import { HomePage } from './pages/HomePage'
 import { ResultsPage } from './pages/ResultsPage'
 import { RunPage } from './pages/RunPage'
@@ -42,7 +40,6 @@ export default function App() {
   const [runError, setRunError] = useState<string | null>(null)
   const [celebrate, setCelebrate] = useState(false)
   const [motionOn, setMotionOn] = useMotionPref()
-  const [variant, setVariant] = useHomeVariant() // TEMPORARY: home-page variants
 
   const closeStream = useRef<(() => void) | null>(null)
 
@@ -133,7 +130,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion={motionOn ? 'never' : 'always'}>
-      <AppBackground variant={variant} theme={theme} animate={motionOn} />
+      <AppBackground theme={theme} animate={motionOn} />
 
       <div className="relative z-10 flex min-h-screen flex-col">
         <TopBar
@@ -142,7 +139,6 @@ export default function App() {
           motion={motionOn}
           onMotionChange={setMotionOn}
           onHome={goHome}
-          showBadge={variant === 'threads'}
         />
 
         <div className="flex-1">
@@ -164,8 +160,6 @@ export default function App() {
                     </div>
                   )}
                   <HomePage
-                    key={variant}
-                    variant={variant}
                     animate={motionOn}
                     demoTopics={demoTopics}
                     onStart={start}
@@ -186,7 +180,6 @@ export default function App() {
         </footer>
 
         <MascotBuddy status={buddyStatus} docked={phase !== 'home'} animate={motionOn} />
-        <VariantSwitcher value={variant} onChange={setVariant} />
       </div>
     </MotionConfig>
   )
