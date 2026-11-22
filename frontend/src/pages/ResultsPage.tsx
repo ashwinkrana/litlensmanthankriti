@@ -10,6 +10,7 @@ import { ChatIcon, DownloadIcon, PenIcon, TableIcon, TargetIcon } from '../compo
 import { HootNote, HootSpeaker } from '../components/hoot/HootPerch'
 import { useHootScene, type HootLine } from '../lib/hootContext'
 import { percent01 } from '../lib/format'
+import type { Theme } from '../components/TopBar'
 
 type TabKey = 'review' | 'comparison' | 'papers' | 'ask' | 'export'
 
@@ -51,7 +52,17 @@ function tabLine(tab: TabKey, review: ReviewResult): HootLine {
   }
 }
 
-export function ResultsPage({ review, animate, wide }: { review: ReviewResult; animate: boolean; wide: boolean }) {
+export function ResultsPage({
+  review,
+  animate,
+  wide,
+  theme,
+}: {
+  review: ReviewResult
+  animate: boolean
+  wide: boolean
+  theme: Theme
+}) {
   const [tab, setTab] = useState<TabKey>('review')
   const line = tabLine(tab, review)
   useHootScene(line.mood, line.caption)
@@ -65,7 +76,7 @@ export function ResultsPage({ review, animate, wide }: { review: ReviewResult; a
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-faint">review</p>
               <h1 className="mt-1 text-xl font-bold tracking-tight text-ink md:text-2xl">{review.topic}</h1>
             </div>
-            {!wide && <HootSpeaker animate={animate} size={84} bubble="none" floor={0.5} />}
+            {!wide && <HootSpeaker animate={animate} theme={theme} size={84} bubble="none" floor={0.5} />}
           </div>
           {!wide && <HootNote className="mt-3" />}
           <div className="mt-4">
@@ -74,7 +85,7 @@ export function ResultsPage({ review, animate, wide }: { review: ReviewResult; a
         </div>
         {wide && (
           <div className="flex justify-end lg:col-span-4">
-            <HootSpeaker animate={animate} size={128} bubble="left" floor={0.6} />
+            <HootSpeaker animate={animate} theme={theme} size={128} bubble="left" floor={0.6} />
           </div>
         )}
       </div>

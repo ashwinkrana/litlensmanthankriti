@@ -154,13 +154,13 @@ export default function App() {
                 </p>
               </div>
             )}
-            <HomePage demoTopics={demoTopics} onStart={start} busy={busy} animate={motionOn} wide={wide} />
+            <HomePage demoTopics={demoTopics} onStart={start} busy={busy} animate={motionOn} wide={wide} theme={theme} />
           </>
         )}
 
-        {phase === 'running' && <RunPage topic={topic} events={events} animate={motionOn} wide={wide} />}
+        {phase === 'running' && <RunPage topic={topic} events={events} animate={motionOn} wide={wide} theme={theme} />}
 
-        {phase === 'results' && review && <ResultsPage review={review} animate={motionOn} wide={wide} />}
+        {phase === 'results' && review && <ResultsPage review={review} animate={motionOn} wide={wide} theme={theme} />}
       </div>
 
       <footer className="border-t border-edge2 px-5 py-4 text-center text-xs text-faint">

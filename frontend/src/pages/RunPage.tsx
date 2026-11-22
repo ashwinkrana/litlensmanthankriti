@@ -1,6 +1,7 @@
 import type { StageEvent } from '../api/types'
 import { AgentTimeline } from '../components/AgentTimeline'
 import { HootNote, HootSpeaker } from '../components/hoot/HootPerch'
+import type { Theme } from '../components/TopBar'
 import { Chip } from '../components/ui'
 
 /**
@@ -13,11 +14,13 @@ export function RunPage({
   events,
   animate,
   wide,
+  theme,
 }: {
   topic: string
   events: StageEvent[]
   animate: boolean
   wide: boolean
+  theme: Theme
 }) {
   return (
     <main className={`mx-auto w-full px-5 py-8 ${wide ? 'grid max-w-6xl grid-cols-12 gap-8' : 'max-w-3xl'}`}>
@@ -34,7 +37,7 @@ export function RunPage({
               live
             </Chip>
           ) : (
-            <HootSpeaker animate={animate} size={88} bubble="none" floor={0.5} />
+            <HootSpeaker animate={animate} theme={theme} size={88} bubble="none" floor={0.5} />
           )}
         </div>
         {!wide && <HootNote className="mt-3" />}
@@ -46,7 +49,7 @@ export function RunPage({
       {wide && (
         <aside className="col-span-4">
           <div className="sticky top-24 flex flex-col items-center">
-            <HootSpeaker animate={animate} size={190} bubble="below" />
+            <HootSpeaker animate={animate} theme={theme} size={190} bubble="below" />
           </div>
         </aside>
       )}

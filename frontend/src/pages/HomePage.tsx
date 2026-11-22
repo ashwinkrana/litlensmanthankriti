@@ -1,7 +1,9 @@
 import { useRef, useState, type CSSProperties } from 'react'
 import { ArrowRightIcon, SparkleIcon } from '../components/icons'
 import { InkButton, Spinner } from '../components/ui'
-import { HootSpeaker } from '../components/hoot/HootPerch'
+import { HootOnBranch, HootSpeaker } from '../components/hoot/HootPerch'
+import type { Theme } from '../components/TopBar'
+import { useMediaQuery } from '../lib/useMediaQuery'
 import { useHoot } from '../lib/hootContext'
 import { useCursorParallax } from '../lib/useCursorParallax'
 
@@ -22,6 +24,7 @@ export function HomePage({
   busy,
   animate,
   wide,
+  theme,
 }: {
   demoTopics: string[]
   onStart: (topic: string, deck: number) => void
@@ -29,7 +32,11 @@ export function HomePage({
   animate: boolean
   /** Wide screens: Hoot's line floats beside him; phones: under him. */
   wide: boolean
+  theme: Theme
 }) {
+  // Room for the branch at the page edge without crowding the centred prompt
+  // (below 1440px the bubble and branch tip run into the headline and card).
+  const onBranch = useMediaQuery('(min-width: 1440px)')
   const hoot = useHoot()
   const stage = useRef<HTMLElement>(null)
   useCursorParallax(stage, animate)
@@ -44,12 +51,16 @@ export function HomePage({
   }
 
   return (
-    // Centred in the first screen (viewport minus top bar and footer).
+    <div className="relative">
+    {onBranch && <HootOnBranch animate={animate} theme={theme} className="top-[6%]" />}
+    {/* Centred in the first screen (viewport minus top bar and footer). */}
     <main ref={stage} className="mx-auto flex min-h-[calc(100dvh-7.5rem)] w-full max-w-3xl flex-col justify-center px-5 py-10 text-center">
-      {/* Hoot hosts the page from above the headline */}
-      <div className="mb-2 flex justify-center">
-        <HootSpeaker animate={animate} size={wide ? 132 : 108} bubble={wide ? 'right' : 'below'} floor={0.6} />
-      </div>
+      {/* Narrower screens: Hoot hosts the page from above the headline */}
+      {!onBranch && (
+        <div className="mb-2 flex justify-center">
+          <HootSpeaker animate={animate} theme={theme} size={wide ? 132 : 108} bubble={wide ? 'right' : 'below'} floor={0.6} />
+        </div>
+      )}
 
       <div className="parallax space-y-2" style={depth(6)}>
         <h1 className="text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
@@ -127,5 +138,6 @@ export function HomePage({
         </div>
       </div>
     </main>
+    </div>
   )
 }

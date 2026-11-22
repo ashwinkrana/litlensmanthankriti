@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Mascot } from 'wobnimo'
 import owl from '../../../mascots/owl'
+import owlPerch from '../../../mascots/owlPerch'
 import type { HootMood } from '../../lib/hootContext'
+import type { Theme } from '../TopBar'
 
 // Hoot v2's cap is ultramarine in the spec; in this amber "study desk" theme he
 // wears the original owl's slate cap.
@@ -14,6 +16,10 @@ const SLATE = { cap: '#3d3a5c' }
 type WithBrain = { brain?: { pointer: { x: number; y: number } | null } }
 const MAX_REACH = 2.6
 
+// The studio lighting is tuned for light pages; on the dark theme it made him
+// glow like a sticker. A lower exposure sits him in the dimmer scene.
+const EXPOSURE: Record<Theme, number> = { light: 1, dark: 0.78 }
+
 /**
  * Hoot himself, rendered with wobnimo's core API (not its React wrapper) so we
  * can steer his gaze page-wide. Fills its box, fades in once the shader is
@@ -22,12 +28,17 @@ const MAX_REACH = 2.6
 export function HootFigure({
   mood,
   animate,
+  theme,
+  perched = false,
   floor = 1,
   className = '',
   style,
 }: {
   mood: HootMood
   animate: boolean
+  theme: Theme
+  /** Standing on his branch (owlPerch spec); the page edge crops the branch. */
+  perched?: boolean
   floor?: number
   className?: string
   style?: CSSProperties
@@ -35,16 +46,22 @@ export function HootFigure({
   const box = useRef<HTMLDivElement>(null)
   const mascot = useRef<Mascot | null>(null)
   const [ready, setReady] = useState(false)
-  const initial = useRef({ mood, animate, floor })
+  // Latest props, read when the mascot is (re)built.
+  const latest = useRef({ mood, animate, floor })
+  useEffect(() => {
+    latest.current = { mood, animate, floor }
+  })
 
-  // Create once; later prop changes go through the setters below.
+  // Built per theme (exposure is fixed at construction) and per spec; mood and
+  // motion changes go through the setters below.
   useEffect(() => {
     const host = box.current
     if (!host) return
     const canvas = host.appendChild(document.createElement('canvas'))
     canvas.style.cssText = 'display:block;width:100%;height:100%'
-    const { mood: m, animate: a, floor: f } = initial.current
-    const hoot = new Mascot(canvas, owl, {
+    const { mood: m, animate: a, floor: f } = latest.current
+    const hoot = new Mascot(canvas, perched ? owlPerch : owl, {
+      exposure: EXPOSURE[theme],
       state: m,
       palette: SLATE,
       speed: a ? 1 : 0,
@@ -78,8 +95,9 @@ export function HootFigure({
       hoot.dispose()
       canvas.remove()
       mascot.current = null
+      setReady(false)
     }
-  }, [])
+  }, [theme, perched])
 
   useEffect(() => {
     mascot.current?.setState(mood)
