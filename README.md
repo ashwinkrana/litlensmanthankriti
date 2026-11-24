@@ -112,7 +112,22 @@ On macOS use `curl` instead of `curl.exe` and plain quotes: `-d '{"topic":"..."}
 
 Reviews are saved in `data/reviews/`, PDFs in `data/pdfs/`, the vector index in `data/chroma/` and the cache in `data/cache.sqlite`. `data/` is only a cache and can be deleted at any time.
 
-## 7. Pre-demo checklist (SECURITY §11)
+## 7. Moving to the Mac (demo laptop)
+
+**Apple Silicon (M1 or newer) only.** PyTorch no longer ships builds for Intel Macs, so `pip install` fails there. Check with  → About This Mac: "Chip: Apple M…" is fine.
+
+1. **Install the tools once.** Python 3.14 from python.org (the macOS installer gives you `python3.14`) or `brew install python@3.14`; Node.js LTS from nodejs.org or `brew install node`. Check with `python3.14 --version` and `node --version`.
+2. **Get the code:** `git clone <repo-url>` (or `git pull` if it is already there).
+3. **Copy what git doesn't carry** (by USB drive or AirDrop, never through git or chat):
+   - the repo-root `.env` with your keys (or make a new one: `cp .env.example .env`);
+   - for demo mode, the whole `data/` folder from the Windows laptop, into the repo root. Reviews, cache and indexes are plain files and work on both OSes.
+4. **Backend:** the macOS commands in section 2. The first start downloads the embedding model (~90 MB) once.
+5. **Frontend:** `cd frontend && npm install && npm run dev`. Use `npm install`, not `npm ci --omit=optional`, so the Mac-native build tools get installed.
+6. **Run `pytest -q`** in `backend/` and open http://localhost:5173.
+
+Embeddings always run on the CPU (not the Mac GPU), so rankings match the Windows laptop exactly and pre-warmed demo data replays the same.
+
+## 8. Pre-demo checklist (SECURITY §11)
 Do these the day **before** the demo:
 - [ ] `git pull` on the demo laptop; `pip install -r requirements.txt` and `npm install` succeed
 - [ ] `.env` is not tracked: `git ls-files | findstr .env` (Windows) / `git ls-files | grep .env` (macOS) shows only `.env.example` files
