@@ -13,6 +13,13 @@ log = logging.getLogger("litlens.embeddings")
 
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
+# Always CPU. On Apple Silicon, sentence-transformers would otherwise pick the
+# GPU ("mps") by itself: rankings would differ slightly from Windows (so demo
+# data pre-warmed on one laptop would not match the other), and MPS is less
+# reliable when called from worker threads (we embed in asyncio.to_thread).
+# MiniLM is small; CPU is fast enough on both machines.
+DEVICE = "cpu"
+
 
 class Embedder(Protocol):
     def embed(self, texts: list[str]) -> np.ndarray:
@@ -42,7 +49,7 @@ class SentenceTransformerEmbedder:
 
                 try:
                     self._model = SentenceTransformer(
-                        self._model_name, local_files_only=True
+                        self._model_name, device=DEVICE, local_files_only=True
                     )
                 except Exception:
                     if not self._allow_download:
@@ -50,7 +57,7 @@ class SentenceTransformerEmbedder:
                     log.warning(
                         "Embedding model not cached; downloading once from huggingface.co"
                     )
-                    self._model = SentenceTransformer(self._model_name)
+                    self._model = SentenceTransformer(self._model_name, device=DEVICE)
             return self._model
 
     def warm_up(self) -> None:
