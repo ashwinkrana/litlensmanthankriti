@@ -26,6 +26,22 @@ cp .env.example .env            # macOS
 
 Set at least `GROQ_API_KEY` and `ARXIV_CONTACT` (your email; arXiv asks API users for a contact). For the Gemini fallback set `GEMINI_API_KEY` and `GEMINI_MODEL` (the current Flash model ID from Google AI Studio).
 
+## Quick start: one command
+From the repo root, `start.py` installs whatever is missing, starts the backend and the frontend together, waits until both answer, and opens http://localhost:5173. Its output is labelled `[backend]` / `[frontend]`, and **Ctrl+C once stops both**.
+
+```powershell
+py start.py                     # Windows
+```
+```bash
+python3 start.py                # macOS
+```
+
+- The first run creates `backend/.venv` and runs `pip install` and `npm install` (a few minutes, mostly PyTorch). Later runs start in seconds, and dependencies are reinstalled automatically when `requirements.txt` or `package-lock.json` change.
+- Options: `--install` (force a reinstall), `--reload` (restart the backend when Python files change, for development), `--no-browser`.
+- It only uses the Python standard library, so any Python 3 can run it; the backend itself always runs on Python 3.14 in `backend/.venv`.
+
+Sections 2 and 3 below do the same steps by hand, in two terminals.
+
 ## 2. Backend
 
 ### Windows (PowerShell)
